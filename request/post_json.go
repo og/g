@@ -12,7 +12,7 @@ type PostJSONProps struct {
 	Path string
 	Query interface{}
 	Data interface{}
-	ResponseDataPtr interface{}
+	Receiver interface{}
 }
 func PostJSON (props PostJSONProps) (res Response, e Error) {
 	var paramsValue url.Values
@@ -31,7 +31,7 @@ func PostJSON (props PostJSONProps) (res Response, e Error) {
 		JSONData: props.Data,
 	})
 	if !e.Fail {
-		gjson.ParseByte(res.Content, props.ResponseDataPtr)
+		gjson.ParseByte(res.Content, props.Receiver)
 	}
 	return
 }
@@ -39,7 +39,7 @@ func PostJSON (props PostJSONProps) (res Response, e Error) {
 type GetJSONProps struct {
 	Path string
 	Query interface{}
-	ResponseDataPtr interface{}
+	Receiver interface{}
 }
 func GetJSON (props GetJSONProps) (res Response, e Error) {
 	var paramsValue url.Values
@@ -56,7 +56,7 @@ func GetJSON (props GetJSONProps) (res Response, e Error) {
 		},
 	})
 	if !e.Fail {
-		gjson.ParseByte(res.Content, props.ResponseDataPtr)
+		gjson.ParseByte(res.Content, props.Receiver)
 	}
 	return
 }

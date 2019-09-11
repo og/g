@@ -17,7 +17,7 @@ func TestPostJSON(t *testing.T) {
 			Name string `url:"name"`
 		}{"some"},
 		Data: struct {Name string}{"nimo"},
-		ResponseDataPtr: &data,
+		Receiver: &data,
 	})
 	assert.Equal(t, false, e.Fail)
 	assert.Equal(t, dataStruct{Name:"nimo", ID:101}, data)
@@ -38,7 +38,7 @@ func TestGetJSON(t *testing.T) {
 		Query: struct {
 			Name string `url:"name"`
 		}{"some"},
-		ResponseDataPtr: &data,
+		Receiver: &data,
 	})
 	assert.Equal(t, false, e.Fail)
 	assert.Equal(t, dataStruct{UserID:1, ID:1, Title:"sunt aut facere repellat provident occaecati excepturi optio reprehenderit", Body:"quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"}, data)
