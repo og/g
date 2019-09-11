@@ -1,11 +1,10 @@
 package gdict
 
 import (
-	gconv "github.com/og/x/conv"
 	"github.com/pkg/errors"
 	"log"
 	"reflect"
-	"runtime"
+	"runtime/debug"
 	"strings"
 )
 
@@ -32,9 +31,8 @@ func setString (value reflect.Value, i int, custom Custom) {
 		runeList := []rune(keyName)
 		runeList[0] = []rune(strings.ToLower(string(runeList[0])))[0]
 		dictValue = string(runeList)
-		_, file, line, _ := runtime.Caller(3)
-		fileLine := file + ":" + gconv.IntString(line)
-		log.Printf("%s \r\n(github.com/og/x/dict) Suggest a clear definition, example: %s string `dict:\"%s\"`", fileLine, keyName, dictValue)
+		log.Printf("(github.com/og/x/dict) |%s| Suggest a clear definition, example: %s string `dict:\"%s\"`", value.Type().Name(), keyName, dictValue)
+		log.Print(string(debug.Stack()))
 	}
 	value.Field(i).SetString(dictValue)
 }
