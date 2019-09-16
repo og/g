@@ -24,7 +24,9 @@ func setString (value reflect.Value, i int, custom Custom) {
 		}
 	}()
 	tagDictValue := reflect.StructTag(structValue.Type().Field(i).Tag).Get(custom.StructTagName)
-	if tagDictValue != "" {
+	if custom.ValueASKey {
+		dictValue = keyName
+	} else if tagDictValue != "" {
 		dictValue = tagDictValue
 	} else {
 		// 首字母转换小写
@@ -62,6 +64,7 @@ type Custom struct {
 	StructTagName string
 	UseOtherStructFill bool
 	OtherStruct interface{}
+	ValueASKey bool
 }
 func CustomFill(v interface{}, custom Custom) {
 	value := reflect.ValueOf(v)
