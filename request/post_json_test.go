@@ -32,7 +32,6 @@ func TestGetJSON(t *testing.T) {
 	}
 	var data dataStruct
 
-
 	_, e := GetJSON(GetJSONProps{
 		Path: "https://jsonplaceholder.typicode.com/posts/1",
 		Query: struct {

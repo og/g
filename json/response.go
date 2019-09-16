@@ -2,11 +2,11 @@ package gjson
 
 type ResponseAuthCode struct {
 	Code string
-	Message string
+	Msg string
 }
 type ResponseFailCode struct {
 	Code string
-	Message string
+	Msg string
 }
 type Response struct {
 	Type string `json:"type"`
@@ -31,7 +31,7 @@ func Auth(code ResponseAuthCode) Response {
 		Type: "auth",
 		Data: EmptyObject(),
 		Code: code.Code,
-		Msg: code.Message,
+		Msg: code.Msg,
 	}
 }
 
@@ -48,7 +48,7 @@ func FailCode(code ResponseFailCode) Response {
 		Type: "fail",
 		Data: EmptyObject(),
 		Code: code.Code,
-		Msg: code.Message,
+		Msg: code.Msg,
 	}
 }
 
@@ -57,6 +57,6 @@ func Fail(data interface{}, code ResponseFailCode) Response {
 		Type: "fail",
 		Data: data,
 		Code: code.Code,
-		Msg: code.Message,
+		Msg: code.Msg,
 	}
 }
