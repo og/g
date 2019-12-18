@@ -48,3 +48,8 @@ func TestFloat64ToFixed (t *testing.T) {
 	assert.Equal(t, Float64ToFixed(v, 9), float64(0.123456789))
 	assert.Equal(t, Float64ToFixed(v, 10), float64(0.1234567891))
 }
+
+func TestDivision(t *testing.T) {
+	assert.Equal(t, Division(2,10), 0.2)
+	assert.Equal(t, Division(10,0), float64(0))
+}

@@ -9,7 +9,6 @@ import (
 type KeyList struct {
 	value []reflect.Value
 }
-
 func (kList KeyList) String() (keys []string) {
 	for _, key := range kList.value {
 		keys = append(keys, key.String())
