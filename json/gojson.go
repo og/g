@@ -1,7 +1,7 @@
 package gjson
 
 import (
-	"encoding/json"
+	"github.com/bytedance/json"
 	"strings"
 )
 

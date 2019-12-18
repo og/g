@@ -242,3 +242,9 @@ func TestStringUnfold(t *testing.T) {
 		assert.Equal(t, userUnfoldJSON, StringUnfold(user))
 	}
 }
+func TestEmptyListMap (t *testing.T) {
+	assert.Equal(t, `{"List":[],"Map":{}}`, String(struct {
+		List []string
+		Map map[string]interface{}
+	}{}))
+}
