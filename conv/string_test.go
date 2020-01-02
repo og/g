@@ -27,3 +27,29 @@ func TestStringFloat32(t *testing.T) {
 	assert.Equal(t, float32(123.1), i)
 	assert.Equal(t, nil, err)
 }
+func TestStringBool(t *testing.T) {
+	{
+		sList := []string{"true", "True","1", "t", "T"}
+		for i:=0 ; i< len(sList) ; i++ {
+			b, err := StringBool(sList[0])
+			assert.Equal(t, b, true)
+			assert.Equal(t, err, nil)
+		}
+	}
+	{
+		sList := []string{"false", "False","f", "F", "0"}
+		for i:=0 ; i< len(sList) ; i++ {
+			b, err := StringBool(sList[0])
+			assert.Equal(t, b, false)
+			assert.Equal(t, err, nil)
+		}
+	}
+	{
+		sList := []string{"asd", "","3t", "2e3f", "sd"}
+		for i:=0 ; i< len(sList) ; i++ {
+			b, err := StringBool(sList[0])
+			assert.Equal(t, b, false)
+			assert.EqualError(t, err, "og/x/conv: " + sList[0]  + " can't conv to bool")
+		}
+	}
+}
