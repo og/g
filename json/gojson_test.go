@@ -248,3 +248,27 @@ func TestEmptyListMap (t *testing.T) {
 		Map map[string]interface{}
 	}{}))
 }
+
+func TestStringConvInt (t *testing.T) {
+	query := struct {
+		Page int `json:"page"`
+	}{}
+	Parse(`{"page": "2"}`,&query)
+	assert.Equal(t, 2, query.Page)
+}
+func TestStringConvIntAndFloat (t *testing.T) {
+	{
+		query := struct {
+			Page int `json:"page"`
+		}{}
+		Parse(`{"page": "2"}`,&query)
+		assert.Equal(t, 2, query.Page)
+	}
+	{
+		query := struct {
+			Page float64 `json:"page"`
+		}{}
+		Parse(`{"page": "2.2"}`,&query)
+		assert.Equal(t, 2.2, query.Page)
+	}
+}
