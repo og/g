@@ -1,7 +1,6 @@
 package gtime
 
 import (
-	gdict "github.com/og/x/dict"
 	"time"
 )
 
@@ -10,19 +9,15 @@ type Range struct {
 	Start time.Time
 	End time.Time
 }
-type dict struct {
-	Range struct{
-		Type struct{
-			Year string `dict:"year"`
-			Month string `dict:"month"`
-			Day string `dict:"day"`
-		}
+func (self Range) Dict() (dict struct{
+	Type struct{
+		Year string
+		Month string
+		Day string
 	}
-}
-var protectDict = dict{}
-func init () {
-	gdict.Fill(&protectDict)
-}
-func Dict() dict {
-	return protectDict
+}) {
+	dict.Type.Year = "year"
+	dict.Type.Month = "month"
+	dict.Type.Day = "day"
+	return
 }

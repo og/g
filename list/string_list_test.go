@@ -136,3 +136,12 @@ func TestStringList_Join(t *testing.T) {
 		assert.Equal(t, "a-b-c", sList.Join("-"))
 	}
 }
+func TestStringList_In(t *testing.T) {
+	{
+		sList := StringList{[]string{"a","b","c"}}
+		assert.Equal(t, sList.In("a"), true)
+		assert.Equal(t, sList.In("b"), true)
+		assert.Equal(t, sList.In("c"), true)
+		assert.Equal(t, sList.In("d"), false)
+	}
+}

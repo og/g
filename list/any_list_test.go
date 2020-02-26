@@ -2,7 +2,6 @@ package glist
 
 import (
 	"github.com/matryer/is"
-	"log"
 	"testing"
 )
 

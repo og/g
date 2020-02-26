@@ -8,11 +8,11 @@ func GetDayRange (timeRange Range) (days []string) {
 	days = []string{}
 	var beyondEndTime time.Time
 	switch timeRange.Type {
-	case Dict().Range.Type.Year:
+	case Range{}.Dict().Type.Year:
 		beyondEndTime = timeRange.End.AddDate(1,0,0)
-	case Dict().Range.Type.Month:
+	case Range{}.Dict().Type.Month:
 		beyondEndTime = timeRange.End.AddDate(0,1,0)
-	case Dict().Range.Type.Day:
+	case Range{}.Dict().Type.Day:
 		beyondEndTime = timeRange.End.AddDate(0,0,1)
 	}
 
