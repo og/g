@@ -71,7 +71,8 @@ func ExampleV_jsonString() {
 		JSON: `{"name":"nimo","age": 18}`,
 	}
 	V(example)
-}
+
+
 func ExampleV_arg() {
 	example := struct {
 		String string
