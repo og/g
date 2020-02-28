@@ -5,7 +5,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
-	"time"
 )
 
 type User struct {
@@ -274,30 +273,53 @@ func TestStringConvIntAndFloat (t *testing.T) {
 		assert.Equal(t, 2.2, query.Page)
 	}
 }
-
-type SecondTime struct {
-	time.Time
-}
-func (t SecondTime) MarshalJSON() ([]byte, error) {
-	return []byte(`"` + t.Format(gtime.Second) + `"`), nil
-}
-func (t *SecondTime) UnmarshalJSON(b []byte) error {
-	v, err := time.Parse(`"` + gtime.Second + `"`, string(b))
-	t.Time = v
-	return err
-}
 func TestInterface (t *testing.T) {
-	data := struct {
-		Date SecondTime
-	}{}
-	Parse(`{"Date":"2020-02-28 20:48:45"}`, &data)
-	assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:48:45")
-	assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48:45"}`)
-	// 如果传给其他函数或赋值结构体则需要通过 data.Date.Time 传递
-	// 使用 UseTime(data.Date) 将会类型报错
-	UseTime(data.Date.Time)
-
-}
-func UseTime(t time.Time) {
-
+	{
+		data := struct {
+			Date SecondTime
+		}{}
+		Parse(`{"Date":"2020-02-28 20:48:45"}`, &data)
+		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:48:45")
+		assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48:45"}`)
+	}
+	{
+		data := struct {
+			Date MinuteTime
+		}{}
+		Parse(`{"Date":"2020-02-28 20:48"}`, &data)
+		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:48:00")
+		assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48"}`)
+	}
+	{
+		data := struct {
+			Date HourTime
+		}{}
+		Parse(`{"Date":"2020-02-28 20"}`, &data)
+		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:00:00")
+		assert.Equal(t, String(data), `{"Date":"2020-02-28 20"}`)
+	}
+	{
+		data := struct {
+			Date DayTime
+		}{}
+		Parse(`{"Date":"2020-02-28"}`, &data)
+		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 00:00:00")
+		assert.Equal(t, String(data), `{"Date":"2020-02-28"}`)
+	}
+	{
+		data := struct {
+			Date MonthTime
+		}{}
+		Parse(`{"Date":"2020-02"}`, &data)
+		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-01 00:00:00")
+		assert.Equal(t, String(data), `{"Date":"2020-02"}`)
+	}
+	{
+		data := struct {
+			Date YearTime
+		}{}
+		Parse(`{"Date":"2020"}`, &data)
+		assert.Equal(t, data.Date.Format(gtime.Second), "2020-01-01 00:00:00")
+		assert.Equal(t, String(data), `{"Date":"2020"}`)
+	}
 }
