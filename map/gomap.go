@@ -41,47 +41,42 @@ func (kList keyList) Float64() (keys []float64) {
 	sort.Float64s(keys)
 	return
 }
-/*
-通过 UnsafeKeys(map[keyType]valueType).keyType()语法可以获取 map 的key列表
-例如:
-	data := map[string]string{"a":"1","b":"2"}
-	UnsafeKeys(data).String() //  []strings{"a","b"}
-
-	data := map[string]int{"a":1,"b":2}
-	UnsafeKeys(data).String() //  []strings{"a","b"}
-
-	data := map[int]int{1:1,2:2}
-	UnsafeKeys(data).Int() //  []int{1,2}
-
-因为 UnsafeKeys(data interface{}) 接收的参数是 interface{} 所以这个函数是类型不安全的，会留下隐患。
-比如上面例子中 map[string]string 改成了 map[int]string 必须要改 UnsafeKeys(data).Int()
-否则会导致报错，且在编译期无法发现。所以不要轻易使用 UnsafeKeys，而是使用 gmap 基于 UnsafeKeys 封装的
-StringStringKeys StringIntKeys IntStringKeys 等方法来确保类型安全。
-
-之所以将 UnsafeKey 公开而不是命名为 unsafeKeys 是因为可以让其他人对特点的map类型进行封装
-例如：
-
-
-type StringTimeMap map[string]time.Time
-
-func (self StringTimeMap) Keys() (keys []string) {
-	keys = UnsafeKeys(self).String()
-	_= self[keys[0]] // 此代码是为了当 keyType 变化时编译失败
-	return
-}
-
-type IntTimeMap map[int]time.Time
-
-func (self IntTimeMap) Keys() (keys []int) {
-	keys = UnsafeKeys(self).Int()
-	_= self[keys[0]] // 此代码是为了当 keyType 变化时编译失败
-	return
-}
-
-*/
-
-
-
+//
+// 通过 UnsafeKeys(map[keyType]valueType).keyType()语法可以获取 map 的key列表
+// 例如:
+// 	data := map[string]string{"a":"1","b":"2"}
+// 	UnsafeKeys(data).String() //  []strings{"a","b"}
+//
+// 	data := map[string]int{"a":1,"b":2}
+// 	UnsafeKeys(data).String() //  []strings{"a","b"}
+//
+// 	data := map[int]int{1:1,2:2}
+// 	UnsafeKeys(data).Int() //  []int{1,2}
+//
+// 因为 UnsafeKeys(data interface{}) 接收的参数是 interface{} 所以这个函数是类型不安全的，会留下隐患。
+// 比如上面例子中 map[string]string 改成了 map[int]string 必须要改 UnsafeKeys(data).Int()
+// 否则会导致报错，且在编译期无法发现。所以不要轻易使用 UnsafeKeys，而是使用 gmap 基于 UnsafeKeys 封装的
+// StringStringKeys StringIntKeys IntStringKeys 等方法来确保类型安全。
+//
+// 之所以将 UnsafeKey 公开而不是命名为 unsafeKeys 是因为可以让其他人对特点的map类型进行封装
+// 例如：
+//
+//
+// type StringTimeMap map[string]time.Time
+//
+// func (self StringTimeMap) Keys() (keys []string) {
+// 	keys = UnsafeKeys(self).String()
+// 	_= self[keys[0]] // 此代码是为了当 keyType 变化时编译失败
+// 	return
+// }
+//
+// type IntTimeMap map[int]time.Time
+//
+// func (self IntTimeMap) Keys() (keys []int) {
+// 	keys = UnsafeKeys(self).Int()
+// 	_= self[keys[0]] // 此代码是为了当 keyType 变化时编译失败
+// 	return
+// }
 func UnsafeKeys(data interface{}) (keys keyList){
 	mapKeys := reflect.ValueOf(data).MapKeys()
 	for _, key := range mapKeys {
