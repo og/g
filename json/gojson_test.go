@@ -33,7 +33,7 @@ func ExampleParse() {
 		Age int
 	}
 	var user User
-	// In the value pointed to by user. If v is nil or not a pointer,
+	// In the value pointed to by user. If v test nil or not a pointer,
 	// Parse returns an InvalidUnmarshalError.
 	Parse(`{"Name":"nimo","Age":27}`, &user)
 }

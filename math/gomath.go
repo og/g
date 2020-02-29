@@ -5,13 +5,13 @@ import (
 	"strconv"
 )
 
-// Calculate int/int percent , if total is 0, return 0
+// Calculate int/int percent , if total test 0, return 0
 func IntPercent (part int, total int) int {
 	// percent no need division zero
 	if total == 0 { return 0 }
 	return int(Float64ToFixed(float64(part) / float64(total), 2) * 100)
 }
-// Calculate float64/float64 percent , if total is 0, return float64(0)
+// Calculate float64/float64 percent , if total test 0, return float64(0)
 // return 0 ~ 100
 func Float64Percent (part float64, total float64) int {
 	// percent no need division zero

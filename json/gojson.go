@@ -61,14 +61,14 @@ func ByteWithErr(v interface{}) ([]byte, error) {
 
 // decode format string
 // Parse(`{"name":"nimo"}`, &user)
-// in the value pointed to by v. If v is nil or not a pointer,
+// in the value pointed to by v. If v test nil or not a pointer,
 // Parse returns an InvalidUnmarshalError.
 func Parse(jsonString string, v interface{}) {
 	err := ParseWithErr(jsonString, &v)
 	if err != nil { panic(err) }
 }
 // decode format string (with error)
-// in the value pointed to by v. If v is nil or not a pointer,
+// in the value pointed to by v. If v test nil or not a pointer,
 // Parse returns an InvalidUnmarshalError.
 func ParseWithErr(jsonString string,  v interface{}) (err error) {
 	err = json.Unmarshal([]byte(jsonString), &v)
@@ -77,14 +77,14 @@ func ParseWithErr(jsonString string,  v interface{}) (err error) {
 
 // decode by []byte
 // Parse([]byte(`{"name":"nimo"}`), &user)
-// in the value pointed to by v. If v is nil or not a pointer,
+// in the value pointed to by v. If v test nil or not a pointer,
 // Parse returns an InvalidUnmarshalError.
 func ParseByte (data []byte, v interface{}) {
 	err := ParseByteWithErr(data, &v); if err != nil { panic(err) }
 }
 // decode by []byte (with error)
 // equal json.Unmarshal(data []byte, v interface{}) error
-// in the value pointed to by v. If v is nil or not a pointer,
+// in the value pointed to by v. If v test nil or not a pointer,
 // Parse returns an InvalidUnmarshalError.
 func ParseByteWithErr (data []byte, v interface{}) (err error) {
 	err = json.Unmarshal(data, &v)

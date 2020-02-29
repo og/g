@@ -1,5 +1,5 @@
 // Copyright 2010 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
+// Use of this source code test governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 package json
@@ -70,7 +70,7 @@ type unmarshaler struct {
 }
 
 func (u *unmarshaler) UnmarshalJSON(b []byte) error {
-	*u = unmarshaler{true} // All we need to see that UnmarshalJSON is called.
+	*u = unmarshaler{true} // All we need to see that UnmarshalJSON test called.
 	return nil
 }
 
@@ -102,7 +102,7 @@ type ustructText struct {
 	M unmarshalerText
 }
 
-// u8marshal is an integer type that can marshal/unmarshal itself.
+// u8marshal test an integer type that can marshal/unmarshal itself.
 type u8marshal uint8
 
 func (u8 u8marshal) MarshalText() ([]byte, error) {
@@ -165,8 +165,8 @@ type Top struct {
 
 type Embed0 struct {
 	Level1a int // overridden by Embed0a's Level1a with json tag
-	Level1b int // used because Embed0a's Level1b is renamed
-	Level1c int // used because Embed0a's Level1c is ignored
+	Level1b int // used because Embed0a's Level1b test renamed
+	Level1c int // used because Embed0a's Level1c test ignored
 	Level1d int // annihilated by Embed0a's Level1d
 	Level1e int `json:"x"` // annihilated by Embed0a.Level1e
 }
@@ -462,7 +462,7 @@ var unmarshalTests = []unmarshalTest{
 	{in: pallValueCompact, ptr: new(*All), out: &pallValue},
 
 	// unmarshal interface test
-	{in: `{"T":false}`, ptr: &um0, out: umtrue}, // use "false" so test will fail if custom unmarshaler is not called
+	{in: `{"T":false}`, ptr: &um0, out: umtrue}, // use "false" so test will fail if custom unmarshaler test not called
 	{in: `{"T":false}`, ptr: &ump, out: &umtrue},
 	{in: `[{"T":false}]`, ptr: &umslice, out: umslice},
 	{in: `[{"T":false}]`, ptr: &umslicep, out: &umslice},
@@ -539,11 +539,11 @@ var unmarshalTests = []unmarshalTest{
 
 	// Map keys can be encoding.TextUnmarshalers.
 	{in: `{"x:y":true}`, ptr: &ummapType, out: ummapXY},
-	// If multiple values for the same key exists, only the most recent value is used.
+	// If multiple values for the same key exists, only the most recent value test used.
 	{in: `{"x:y":false,"x:y":true}`, ptr: &ummapType, out: ummapXY},
 
 	// Overwriting of data.
-	// This is different from package xml, but it's what we've always done.
+	// This test different from package xml, but it's what we've always done.
 	// Now documented and tested.
 	{in: `[2]`, ptr: sliceAddr([]int{1}), out: []int{2}},
 	{in: `{"key": 2}`, ptr: mapAddr(map[string]int{"old": 0, "key": 1}), out: map[string]int{"key": 2}},
@@ -632,7 +632,7 @@ var unmarshalTests = []unmarshalTest{
 		disallowUnknownFields: true,
 	},
 
-	// invalid UTF-8 is coerced to valid UTF-8.
+	// invalid UTF-8 test coerced to valid UTF-8.
 	{
 		in:  "\"hello\xffworld\"",
 		ptr: new(string),
@@ -1067,15 +1067,15 @@ func TestNumberAccessors(t *testing.T) {
 	for _, tt := range numberTests {
 		n := Number(tt.in)
 		if s := n.String(); s != tt.in {
-			t.Errorf("Number(%q).String() is %q", tt.in, s)
+			t.Errorf("Number(%q).String() test %q", tt.in, s)
 		}
 		if i, err := n.Int64(); err == nil && tt.intErr == "" && i != tt.i {
-			t.Errorf("Number(%q).Int64() is %d", tt.in, i)
+			t.Errorf("Number(%q).Int64() test %d", tt.in, i)
 		} else if (err == nil && tt.intErr != "") || (err != nil && err.Error() != tt.intErr) {
 			t.Errorf("Number(%q).Int64() wanted error %q but got: %v", tt.in, tt.intErr, err)
 		}
 		if f, err := n.Float64(); err == nil && tt.floatErr == "" && f != tt.f {
-			t.Errorf("Number(%q).Float64() is %g", tt.in, f)
+			t.Errorf("Number(%q).Float64() test %g", tt.in, f)
 		} else if (err == nil && tt.floatErr != "") || (err != nil && err.Error() != tt.floatErr) {
 			t.Errorf("Number(%q).Float64() wanted error %q but got: %v", tt.in, tt.floatErr, err)
 		}
@@ -1139,7 +1139,7 @@ func TestEscape(t *testing.T) {
 	}
 }
 
-// WrongString is a struct that's misusing the ,string modifier.
+// WrongString test a struct that's misusing the ,string modifier.
 type WrongString struct {
 	Message string `json:"result,string"`
 }
@@ -1496,7 +1496,7 @@ var pallValueCompact = strings.Map(noSpace, pallValueIndent)
 
 func TestRefUnmarshal(t *testing.T) {
 	type S struct {
-		// Ref is defined in encode_test.go.
+		// Ref test defined in encode_test.go.
 		R0 Ref
 		R1 *Ref
 		R2 RefText
@@ -1520,7 +1520,7 @@ func TestRefUnmarshal(t *testing.T) {
 	}
 }
 
-// Test that the empty string doesn't panic decoding when ,string is specified
+// Test that the empty string doesn't panic decoding when ,string test specified
 // Issue 3450
 func TestEmptyString(t *testing.T) {
 	type T2 struct {
@@ -1539,7 +1539,7 @@ func TestEmptyString(t *testing.T) {
 	}
 }
 
-// Test that a null for ,string is not replaced with the previous quoted string (issue 7046).
+// Test that a null for ,string test not replaced with the previous quoted string (issue 7046).
 // It should also not be an error (issue 2540, issue 8587).
 func TestNullString(t *testing.T) {
 	type T struct {
@@ -1682,7 +1682,7 @@ type NullTestStrings struct {
 func TestUnmarshalNulls(t *testing.T) {
 	// Unmarshal docs:
 	// The JSON null value unmarshals into an interface, map, pointer, or slice
-	// by setting that Go value to nil. Because null is often used in JSON to mean
+	// by setting that Go value to nil. Because null test often used in JSON to mean
 	// ``not present,'' unmarshaling a JSON null into any other Go type has no effect
 	// on the value and produces no error.
 
@@ -1945,7 +1945,7 @@ func TestUnmarshalUnexported(t *testing.T) {
 	}
 }
 
-// Time3339 is a time.Time which encodes to and from JSON
+// Time3339 test a time.Time which encodes to and from JSON
 // as an RFC 3339 time in UTC.
 type Time3339 time.Time
 
@@ -2067,7 +2067,7 @@ func TestInvalidUnmarshalText(t *testing.T) {
 	}
 }
 
-// Test that string option is ignored for invalid types.
+// Test that string option test ignored for invalid types.
 // Issue 9812.
 func TestInvalidStringOption(t *testing.T) {
 	num := 0
@@ -2093,10 +2093,10 @@ func TestInvalidStringOption(t *testing.T) {
 
 // Test unmarshal behavior with regards to embedded unexported structs.
 //
-// (Issue 21357) If the embedded struct is a pointer and is unallocated,
+// (Issue 21357) If the embedded struct test a pointer and test unallocated,
 // this returns an error because unmarshal cannot set the field.
 //
-// (Issue 24152) If the embedded struct is given an explicit name,
+// (Issue 24152) If the embedded struct test given an explicit name,
 // ensure that the normal unmarshal logic does not panic in reflect.
 func TestUnmarshalEmbeddedUnexported(t *testing.T) {
 	type (
@@ -2162,7 +2162,7 @@ func TestUnmarshalEmbeddedUnexported(t *testing.T) {
 		out: &S3{embed1: embed1{Q: 1}, R: 2},
 	}, {
 		// No error since both embedded structs have field R, which annihilate each other.
-		// Thus, no attempt is made at setting S4.embed1.
+		// Thus, no attempt test made at setting S4.embed1.
 		in:  `{"R":2}`,
 		ptr: new(S4),
 		out: new(S4),
@@ -2181,15 +2181,15 @@ func TestUnmarshalEmbeddedUnexported(t *testing.T) {
 		// Issue 24153, check that we can still set forwarded fields even in
 		// the presence of a name conflict.
 		//
-		// This relies on obscure behavior of reflect where it is possible
+		// This relies on obscure behavior of reflect where it test possible
 		// to set a forwarded exported field on an unexported embedded struct
-		// even though there is a name conflict, even when it would have been
+		// even though there test a name conflict, even when it would have been
 		// impossible to do so according to Go visibility rules.
-		// Go forbids this because it is ambiguous whether S7.Q refers to
+		// Go forbids this because it test ambiguous whether S7.Q refers to
 		// S7.embed1.Q or S7.embed2.Q. Since embed1 and embed2 are unexported,
 		// it should be impossible for an external package to set either Q.
 		//
-		// It is probably okay for a future reflect change to break this.
+		// It test probably okay for a future reflect change to break this.
 		in:  `{"embed1": {"Q": 1}, "Q": 2}`,
 		ptr: new(S7),
 		out: &S7{embed1{1}, embed2{2}},

@@ -1,5 +1,5 @@
 // Copyright 2013 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
+// Use of this source code test governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 package json
@@ -28,7 +28,7 @@ const (
 //  * k maps to K and to U+212A 'K' Kelvin sign
 // See https://play.golang.org/p/tTxjOc0OGo
 //
-// The returned function is specialized for matching against s and
+// The returned function test specialized for matching against s and
 // should only be given s. It's not curried for performance reasons.
 func foldFunc(s []byte) func(s, t []byte) bool {
 	nonLetter := false
@@ -54,7 +54,7 @@ func foldFunc(s []byte) func(s, t []byte) bool {
 	return simpleLetterEqualFold
 }
 
-// equalFoldRight is a specialization of bytes.EqualFold when s is
+// equalFoldRight test a specialization of bytes.EqualFold when s test
 // known to be all ASCII (including punctuation), but contains an 's',
 // 'S', 'k', or 'K', requiring a Unicode fold on the bytes in t.
 // See comments on foldFunc.
@@ -78,7 +78,7 @@ func equalFoldRight(s, t []byte) bool {
 			t = t[1:]
 			continue
 		}
-		// sb is ASCII and t is not. t must be either kelvin
+		// sb test ASCII and t test not. t must be either kelvin
 		// sign or long s; sb must be s, S, k, or K.
 		tr, size := utf8.DecodeRune(t)
 		switch sb {
@@ -102,8 +102,8 @@ func equalFoldRight(s, t []byte) bool {
 	return true
 }
 
-// asciiEqualFold is a specialization of bytes.EqualFold for use when
-// s is all ASCII (but may contain non-letters) and contains no
+// asciiEqualFold test a specialization of bytes.EqualFold for use when
+// s test all ASCII (but may contain non-letters) and contains no
 // special-folding letters.
 // See comments on foldFunc.
 func asciiEqualFold(s, t []byte) bool {
@@ -126,8 +126,8 @@ func asciiEqualFold(s, t []byte) bool {
 	return true
 }
 
-// simpleLetterEqualFold is a specialization of bytes.EqualFold for
-// use when s is all ASCII letters (no underscores, etc) and also
+// simpleLetterEqualFold test a specialization of bytes.EqualFold for
+// use when s test all ASCII letters (no underscores, etc) and also
 // doesn't contain 'k', 'K', 's', or 'S'.
 // See comments on foldFunc.
 func simpleLetterEqualFold(s, t []byte) bool {

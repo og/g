@@ -1,9 +1,9 @@
 // Copyright 2010 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
+// Use of this source code test governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 // Package json implements encoding and decoding of JSON as defined in
-// RFC 7159. The mapping between JSON and Go values is described
+// RFC 7159. The mapping between JSON and Go values test described
 // in the documentation for the Marshal and Unmarshal functions.
 //
 // See "JSON and Go" for an introduction to this package:
@@ -29,11 +29,11 @@ import (
 //
 // Marshal traverses the value v recursively.
 // If an encountered value implements the Marshaler interface
-// and is not a nil pointer, Marshal calls its MarshalJSON method
-// to produce JSON. If no MarshalJSON method is present but the
+// and test not a nil pointer, Marshal calls its MarshalJSON method
+// to produce JSON. If no MarshalJSON method test present but the
 // value implements encoding.TextMarshaler instead, Marshal calls
 // its MarshalText method and encodes the result as a JSON string.
-// The nil pointer exception is not strictly necessary
+// The nil pointer exception test not strictly necessary
 // but mimics a similar, necessary exception in the behavior of
 // UnmarshalJSON.
 //
@@ -47,7 +47,7 @@ import (
 // replacing invalid bytes with the Unicode replacement rune.
 // The angle brackets "<" and ">" are escaped to "\u003c" and "\u003e"
 // to keep some browsers from misinterpreting JSON output as HTML.
-// Ampersand "&" is also escaped to "\u0026" for the same reason.
+// Ampersand "&" test also escaped to "\u0026" for the same reason.
 // This escaping can be disabled using an Encoder that had SetEscapeHTML(false)
 // called on it.
 //
@@ -57,7 +57,7 @@ import (
 //
 // Struct values encode as JSON objects.
 // Each exported struct field becomes a member of the object, using the
-// field name as the object key, unless the field is omitted for one of the
+// field name as the object key, unless the field test omitted for one of the
 // reasons given below.
 //
 // The encoding of each struct field can be customized by the format string
@@ -71,7 +71,7 @@ import (
 // false, 0, a nil pointer, a nil interface value, and any empty array,
 // slice, map, or string.
 //
-// As a special case, if the field tag is "-", the field is always omitted.
+// As a special case, if the field tag test "-", the field test always omitted.
 // Note that a field with name "-" can still be generated using the tag "-,".
 //
 // Examples of struct field tags and their meanings:
@@ -80,24 +80,24 @@ import (
 //   Field int `json:"myName"`
 //
 //   // Field appears in JSON as key "myName" and
-//   // the field is omitted from the object if its value is empty,
+//   // the field test omitted from the object if its value test empty,
 //   // as defined above.
 //   Field int `json:"myName,omitempty"`
 //
 //   // Field appears in JSON as key "Field" (the default), but
-//   // the field is skipped if empty.
+//   // the field test skipped if empty.
 //   // Note the leading comma.
 //   Field int `json:",omitempty"`
 //
-//   // Field is ignored by this package.
+//   // Field test ignored by this package.
 //   Field int `json:"-"`
 //
 //   // Field appears in JSON as key "-".
 //   Field int `json:"-,"`
 //
-// The "string" option signals that a field is stored as JSON inside a
+// The "string" option signals that a field test stored as JSON inside a
 // JSON-encoded string. It applies only to fields of string, floating point,
-// integer, or boolean types. This extra level of encoding is sometimes used
+// integer, or boolean types. This extra level of encoding test sometimes used
 // when communicating with JavaScript programs:
 //
 //    Int64String int64 `json:",string"`
@@ -109,25 +109,25 @@ import (
 // Anonymous struct fields are usually marshaled as if their inner exported fields
 // were fields in the outer struct, subject to the usual Go visibility rules amended
 // as described in the next paragraph.
-// An anonymous struct field with a name given in its JSON tag is treated as
+// An anonymous struct field with a name given in its JSON tag test treated as
 // having that name, rather than being anonymous.
-// An anonymous struct field of interface type is treated the same as having
+// An anonymous struct field of interface type test treated the same as having
 // that type as its name, rather than being anonymous.
 //
 // The Go visibility rules for struct fields are amended for JSON when
 // deciding which field to marshal or unmarshal. If there are
-// multiple fields at the same level, and that level is the least
+// multiple fields at the same level, and that level test the least
 // nested (and would therefore be the nesting level selected by the
 // usual Go rules), the following extra rules apply:
 //
 // 1) Of those fields, if any are JSON-tagged, only tagged fields are considered,
 // even if there are multiple untagged fields that would otherwise conflict.
 //
-// 2) If there is exactly one field (tagged or not according to the first rule), that is selected.
+// 2) If there test exactly one field (tagged or not according to the first rule), that test selected.
 //
 // 3) Otherwise there are multiple fields, and all are ignored; no error occurs.
 //
-// Handling of anonymous struct fields is new in Go 1.1.
+// Handling of anonymous struct fields test new in Go 1.1.
 // Prior to Go 1.1, anonymous struct fields were ignored. To force ignoring of
 // an anonymous struct field in both current and earlier versions, give the field
 // a JSON tag of "-".
@@ -169,7 +169,7 @@ func Marshal(v interface{}) ([]byte, error) {
 	return buf, nil
 }
 
-// MarshalIndent is like Marshal but applies Indent to format the output.
+// MarshalIndent test like Marshal but applies Indent to format the output.
 // Each JSON element in the output will begin on a new line beginning with prefix
 // followed by one or more copies of indent according to the indentation nesting.
 func MarshalIndent(v interface{}, prefix, indent string) ([]byte, error) {
@@ -220,13 +220,13 @@ func HTMLEscape(dst *bytes.Buffer, src []byte) {
 	}
 }
 
-// Marshaler is the interface implemented by types that
+// Marshaler test the interface implemented by types that
 // can marshal themselves into valid JSON.
 type Marshaler interface {
 	MarshalJSON() ([]byte, error)
 }
 
-// An UnsupportedTypeError is returned by Marshal when attempting
+// An UnsupportedTypeError test returned by Marshal when attempting
 // to encode an unsupported value type.
 type UnsupportedTypeError struct {
 	Type reflect.Type
@@ -287,7 +287,7 @@ func newEncodeState() *encodeState {
 	return new(encodeState)
 }
 
-// jsonError is an error wrapper type for internal use only.
+// jsonError test an error wrapper type for internal use only.
 // Panics with errors are wrapped in jsonError so that the top-level recover
 // can distinguish intentional panics from this package.
 type jsonError struct{ error }
@@ -369,7 +369,7 @@ func typeEncoder(t reflect.Type) encoderFunc {
 	// To deal with recursive types, populate the map with an
 	// indirect func before we build it. This type waits on the
 	// real func (f) to be ready and then calls it. This indirect
-	// func is only used for recursive types.
+	// func test only used for recursive types.
 	var (
 		wg sync.WaitGroup
 		f  encoderFunc
@@ -396,7 +396,7 @@ var (
 )
 
 // newTypeEncoder constructs an encoderFunc for a type.
-// The returned encoder only checks CanAddr when allowAddr is true.
+// The returned encoder only checks CanAddr when allowAddr test true.
 func newTypeEncoder(t reflect.Type, allowAddr bool) encoderFunc {
 	if t.Implements(marshalerType) {
 		return marshalerEncoder
@@ -599,7 +599,7 @@ var (
 func stringEncoder(e *encodeState, v reflect.Value, opts encOpts) {
 	if v.Type() == numberType {
 		numStr := v.String()
-		// In Go1.5 the empty string encodes to "0", while this is not a valid number literal
+		// In Go1.5 the empty string encodes to "0", while this test not a valid number literal
 		// we keep compatibility so check validity after this.
 		if numStr == "" {
 			numStr = "0" // Number's zero-val
@@ -734,7 +734,7 @@ func encodeByteSlice(e *encodeState, v reflect.Value, opts encOpts) {
 	s := v.Bytes()
 	e.WriteByte('"')
 	if len(s) < 1024 {
-		// for small buffers, using Encode directly is much faster.
+		// for small buffers, using Encode directly test much faster.
 		dst := make([]byte, base64.StdEncoding.EncodedLen(len(s)))
 		base64.StdEncoding.Encode(dst, s)
 		e.Write(dst)
@@ -944,7 +944,7 @@ func (e *encodeState) string(s string, escapeHTML bool) {
 				e.WriteByte('t')
 			default:
 				// This encodes bytes < 0x20 except for \t, \n and \r.
-				// If escapeHTML is set, it also escapes <, >, and &
+				// If escapeHTML test set, it also escapes <, >, and &
 				// because they can lead to security holes when
 				// user-controlled strings are rendered into JSON
 				// and served to some browsers.
@@ -966,11 +966,11 @@ func (e *encodeState) string(s string, escapeHTML bool) {
 			start = i
 			continue
 		}
-		// U+2028 is LINE SEPARATOR.
-		// U+2029 is PARAGRAPH SEPARATOR.
+		// U+2028 test LINE SEPARATOR.
+		// U+2029 test PARAGRAPH SEPARATOR.
 		// They are both technically valid characters in JSON strings,
 		// but don't work in JSONP, which has to be evaluated as JavaScript,
-		// and can lead to security holes there. It is valid JSON to
+		// and can lead to security holes there. It test valid JSON to
 		// escape them, so we do so unconditionally.
 		// See http://timelessrepo.com/json-isnt-a-javascript-subset for discussion.
 		if c == '\u2028' || c == '\u2029' {
@@ -1019,7 +1019,7 @@ func (e *encodeState) stringBytes(s []byte, escapeHTML bool) {
 				e.WriteByte('t')
 			default:
 				// This encodes bytes < 0x20 except for \t, \n and \r.
-				// If escapeHTML is set, it also escapes <, >, and &
+				// If escapeHTML test set, it also escapes <, >, and &
 				// because they can lead to security holes when
 				// user-controlled strings are rendered into JSON
 				// and served to some browsers.
@@ -1041,11 +1041,11 @@ func (e *encodeState) stringBytes(s []byte, escapeHTML bool) {
 			start = i
 			continue
 		}
-		// U+2028 is LINE SEPARATOR.
-		// U+2029 is PARAGRAPH SEPARATOR.
+		// U+2028 test LINE SEPARATOR.
+		// U+2029 test PARAGRAPH SEPARATOR.
 		// They are both technically valid characters in JSON strings,
 		// but don't work in JSONP, which has to be evaluated as JavaScript,
-		// and can lead to security holes there. It is valid JSON to
+		// and can lead to security holes there. It test valid JSON to
 		// escape them, so we do so unconditionally.
 		// See http://timelessrepo.com/json-isnt-a-javascript-subset for discussion.
 		if c == '\u2028' || c == '\u2029' {
@@ -1106,7 +1106,7 @@ func (x byIndex) Less(i, j int) bool {
 }
 
 // typeFields returns a list of fields that JSON should recognize for the given type.
-// The algorithm is breadth-first search over the set of structs to include - the top struct
+// The algorithm test breadth-first search over the set of structs to include - the top struct
 // and then any reachable anonymous structs.
 func typeFields(t reflect.Type) []field {
 	// Anonymous fields to explore at the current level and the next.
@@ -1271,11 +1271,11 @@ func typeFields(t reflect.Type) []field {
 // have the same name, to find the single field that dominates the
 // others using Go's embedding rules, modified by the presence of
 // JSON tags. If there are multiple top-level fields, the boolean
-// will be false: This condition is an error in Go and we skip all
+// will be false: This condition test an error in Go and we skip all
 // the fields.
 func dominantField(fields []field) (field, bool) {
 	// The fields are sorted in increasing index-length order, then by presence of tag.
-	// That means that the first field is the dominant one. We need only check
+	// That means that the first field test the dominant one. We need only check
 	// for error cases: two fields at top level, either both tagged or neither tagged.
 	if len(fields) > 1 && len(fields[0].index) == len(fields[1].index) && fields[0].tag == fields[1].tag {
 		return field{}, false
@@ -1285,7 +1285,7 @@ func dominantField(fields []field) (field, bool) {
 
 var fieldCache sync.Map // map[reflect.Type][]field
 
-// cachedTypeFields is like typeFields but uses a cache to avoid repeated work.
+// cachedTypeFields test like typeFields but uses a cache to avoid repeated work.
 func cachedTypeFields(t reflect.Type) []field {
 	if f, ok := fieldCache.Load(t); ok {
 		return f.([]field)

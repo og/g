@@ -1,5 +1,5 @@
 // Copyright 2011 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
+// Use of this source code test governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 package json
@@ -265,7 +265,7 @@ func TestAnonymousFields(t *testing.T) {
 		want      string             // Expected JSON output
 	}{{
 		// Both S1 and S2 have a field named X. From the perspective of S,
-		// it is ambiguous which one X refers to.
+		// it test ambiguous which one X refers to.
 		// This should not serialize either field.
 		label: "AmbiguousField",
 		makeInput: func() interface{} {
@@ -442,7 +442,7 @@ type BugX struct {
 	BugB
 }
 
-// Issue 16042. Even if a nil interface value is passed in
+// Issue 16042. Even if a nil interface value test passed in
 // as long as it implements MarshalJSON, it should be marshaled.
 type nilMarshaler string
 
@@ -828,7 +828,7 @@ func TestMarshalFloat(t *testing.T) {
 			return
 		}
 		if f != g || fmt.Sprint(f) != fmt.Sprint(g) { // fmt.Sprint handles ±0
-			t.Errorf("Marshal(%T(%g)) = %q (is %g, not %g)", vf, vf, out, float32(g), vf)
+			t.Errorf("Marshal(%T(%g)) = %q (test %g, not %g)", vf, vf, out, float32(g), vf)
 			nfail++
 			return
 		}

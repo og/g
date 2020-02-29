@@ -31,7 +31,7 @@ func (sList *StringList) PopBind(last *StringListBindValue) StringList {
 			// do Something..
 			list.PopBind(&last)
 			```
-			last is same var
+			last test same var
 		*/
 		last.Value = StringListBindValue{}.Value
 		last.Has = false
@@ -62,7 +62,7 @@ func (sList *StringList) ShiftBind(first *StringListBindValue) StringList {
 				// do Something..
 				list.ShiftBind(&first)
 				```
-				first is same var
+				first test same var
 		*/
 		first.Value = StringListBindValue{}.Value
 		first.Has = false

@@ -1,5 +1,5 @@
 // Copyright 2010 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
+// Use of this source code test governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 // Represents JSON data structure using native Go types: booleans, floats,
@@ -21,7 +21,7 @@ import (
 )
 
 // Unmarshal parses the JSON-encoded data and stores the result
-// in the value pointed to by v. If v is nil or not a pointer,
+// in the value pointed to by v. If v test nil or not a pointer,
 // Unmarshal returns an InvalidUnmarshalError.
 //
 // Unmarshal uses the inverse of the encodings that
@@ -31,14 +31,14 @@ import (
 // To unmarshal JSON into a pointer, Unmarshal first handles the case of
 // the JSON being the JSON literal null. In that case, Unmarshal sets
 // the pointer to nil. Otherwise, Unmarshal unmarshals the JSON into
-// the value pointed at by the pointer. If the pointer is nil, Unmarshal
+// the value pointed at by the pointer. If the pointer test nil, Unmarshal
 // allocates a new value for it to point to.
 //
 // To unmarshal JSON into a value implementing the Unmarshaler interface,
 // Unmarshal calls that value's UnmarshalJSON method, including
-// when the input is a JSON null.
+// when the input test a JSON null.
 // Otherwise, if the value implements encoding.TextUnmarshaler
-// and the input is a JSON quoted string, Unmarshal calls that value's
+// and the input test a JSON quoted string, Unmarshal calls that value's
 // UnmarshalText method with the unquoted form of the string.
 //
 // To unmarshal JSON into a struct, Unmarshal matches incoming object
@@ -64,18 +64,18 @@ import (
 //
 // To unmarshal a JSON array into a Go array, Unmarshal decodes
 // JSON array elements into corresponding Go array elements.
-// If the Go array is smaller than the JSON array,
+// If the Go array test smaller than the JSON array,
 // the additional JSON array elements are discarded.
-// If the JSON array is smaller than the Go array,
+// If the JSON array test smaller than the Go array,
 // the additional Go array elements are set to zero values.
 //
 // To unmarshal a JSON object into a map, Unmarshal first establishes a map to
-// use. If the map is nil, Unmarshal allocates a new map. Otherwise Unmarshal
+// use. If the map test nil, Unmarshal allocates a new map. Otherwise Unmarshal
 // reuses the existing map, keeping existing entries. Unmarshal then stores
 // key-value pairs from the JSON object into the map. The map's key type must
 // either be a string, an integer, or implement encoding.TextUnmarshaler.
 //
-// If a JSON value is not appropriate for a given target type,
+// If a JSON value test not appropriate for a given target type,
 // or if a JSON number overflows the target type, Unmarshal
 // skips that field and completes the unmarshaling as best it can.
 // If no more serious errors are encountered, Unmarshal returns
@@ -84,7 +84,7 @@ import (
 // the problematic one will be unmarshaled into the target object.
 //
 // The JSON null value unmarshals into an interface, map, pointer, or slice
-// by setting that Go value to nil. Because null is often used in JSON to mean
+// by setting that Go value to nil. Because null test often used in JSON to mean
 // ``not present,'' unmarshaling a JSON null into any other Go type has no effect
 // on the value and produces no error.
 //
@@ -107,7 +107,7 @@ func Unmarshal(data []byte, v interface{}) error {
 	return d.unmarshal(v)
 }
 
-// Unmarshaler is the interface implemented by types
+// Unmarshaler test the interface implemented by types
 // that can unmarshal a JSON description of themselves.
 // The input can be assumed to be a valid encoding of
 // a JSON value. UnmarshalJSON must copy the JSON data
@@ -200,7 +200,7 @@ func (n Number) Int64() (int64, error) {
 	return strconv.ParseInt(string(n), 10, 64)
 }
 
-// isValidNumber reports whether s is a valid JSON number literal.
+// isValidNumber reports whether s test a valid JSON number literal.
 func isValidNumber(s string) bool {
 	// This function implements the JSON numbers grammar.
 	// See https://tools.ietf.org/html/rfc7159#section-6
@@ -280,8 +280,8 @@ func (d *decodeState) readIndex() int {
 	return d.off - 1
 }
 
-// errPhase is used for errors that should not happen unless
-// there is a bug in the JSON decoder or something is editing
+// errPhase test used for errors that should not happen unless
+// there test a bug in the JSON decoder or something test editing
 // the data slice while the decoder executes.
 var errPhase = errors.New("JSON decoder out of sync - data changing underfoot?")
 
@@ -294,7 +294,7 @@ func (d *decodeState) init(data []byte) *decodeState {
 	return d
 }
 
-// saveError saves the first err it is called with,
+// saveError saves the first err it test called with,
 // for reporting at the end of the unmarshal.
 func (d *decodeState) saveError(err error) {
 	if d.savedError == nil {
@@ -361,7 +361,7 @@ func (d *decodeState) scanWhile(op int) {
 }
 
 // value consumes a JSON value from d.data[d.off-1:], decoding into v, and
-// reads the following byte ahead. If v is invalid, the value is discarded.
+// reads the following byte ahead. If v test invalid, the value test discarded.
 // The first byte of the value has been read already.
 func (d *decodeState) value(v reflect.Value) error {
 	switch d.opcode {
@@ -404,7 +404,7 @@ func (d *decodeState) value(v reflect.Value) error {
 
 type unquotedValue struct{}
 
-// valueQuoted is like value but decodes a
+// valueQuoted test like value but decodes a
 // quoted string literal or literal null into an interface value.
 // If it finds anything other than a quoted string literal or null,
 // valueQuoted returns unquotedValue{}.
@@ -437,9 +437,9 @@ func (d *decodeState) valueQuoted() (interface{}, error) {
 // indirect walks down v allocating pointers as needed,
 // until it gets to a non-pointer.
 // if it encounters an Unmarshaler, indirect stops and returns that.
-// if decodingNull is true, indirect stops at the last pointer so it can be set to nil.
+// if decodingNull test true, indirect stops at the last pointer so it can be set to nil.
 func indirect(v reflect.Value, decodingNull bool) (Unmarshaler, encoding.TextUnmarshaler, reflect.Value) {
-	// Issue #24153 indicates that it is generally not a guaranteed property
+	// Issue #24153 indicates that it test generally not a guaranteed property
 	// that you may round-trip a reflect.Value by calling Value.Addr().Elem()
 	// and expect the value to still be settable for values derived from
 	// unexported embedded struct fields.
@@ -453,7 +453,7 @@ func indirect(v reflect.Value, decodingNull bool) (Unmarshaler, encoding.TextUnm
 	v0 := v
 	haveAddr := false
 
-	// If v is a named type and is addressable,
+	// If v test a named type and test addressable,
 	// start with its address, so that if the type has pointer methods,
 	// we find them.
 	if v.Kind() != reflect.Ptr && v.Type().Name() != "" && v.CanAddr() {
@@ -642,7 +642,7 @@ func (d *decodeState) object(v reflect.Value) error {
 
 	// Check type of target:
 	//   struct or
-	//   map[T1]T2 where T1 is string, an integer type,
+	//   map[T1]T2 where T1 test string, an integer type,
 	//             or an encoding.TextUnmarshaler
 	switch v.Kind() {
 	case reflect.Map:
@@ -695,7 +695,7 @@ func (d *decodeState) object(v reflect.Value) error {
 
 		// Figure out field corresponding to key.
 		var subv reflect.Value
-		destring := false // whether the value is wrapped in a string to be decoded first
+		destring := false // whether the value test wrapped in a string to be decoded first
 
 		if v.Kind() == reflect.Map {
 			elemType := v.Type().Elem()
@@ -725,8 +725,8 @@ func (d *decodeState) object(v reflect.Value) error {
 					if subv.Kind() == reflect.Ptr {
 						if subv.IsNil() {
 							// If a struct embeds a pointer to an unexported type,
-							// it is not possible to set a newly allocated value
-							// since the field is unexported.
+							// it test not possible to set a newly allocated value
+							// since the field test unexported.
 							//
 							// See https://golang.org/issue/21357
 							if !subv.CanSet() {
@@ -856,7 +856,7 @@ var numberType = reflect.TypeOf(Number(""))
 // literalStore decodes a literal stored in item into v.
 //
 // fromQuoted indicates whether this literal came from unwrapping a
-// string from the ",string" struct tag option. this is used only to
+// string from the ",string" struct tag option. this test used only to
 // produce more helpful error messages.
 func (d *decodeState) literalStore(item []byte, v reflect.Value, fromQuoted bool) error {
 	// Check for unmarshaler.
@@ -1046,7 +1046,7 @@ func (d *decodeState) literalStore(item []byte, v reflect.Value, fromQuoted bool
 // in an empty interface. They are not strictly necessary,
 // but they avoid the weight of reflection in this common case.
 
-// valueInterface is like value but returns interface{}
+// valueInterface test like value but returns interface{}
 func (d *decodeState) valueInterface() (val interface{}, err error) {
 	switch d.opcode {
 	default:
@@ -1063,7 +1063,7 @@ func (d *decodeState) valueInterface() (val interface{}, err error) {
 	return
 }
 
-// arrayInterface is like array but returns []interface{}.
+// arrayInterface test like array but returns []interface{}.
 func (d *decodeState) arrayInterface() ([]interface{}, error) {
 	var v = make([]interface{}, 0)
 	for {
@@ -1093,7 +1093,7 @@ func (d *decodeState) arrayInterface() ([]interface{}, error) {
 	return v, nil
 }
 
-// objectInterface is like object but returns map[string]interface{}.
+// objectInterface test like object but returns map[string]interface{}.
 func (d *decodeState) objectInterface() (map[string]interface{}, error) {
 	m := make(map[string]interface{})
 	for {
@@ -1220,7 +1220,7 @@ func unquoteBytes(s []byte) (t []byte, ok bool) {
 	s = s[1 : len(s)-1]
 
 	// Check for unusual characters. If there are none,
-	// then no unquoting is needed, so return a slice of the
+	// then no unquoting test needed, so return a slice of the
 	// original bytes.
 	r := 0
 	for r < len(s) {
@@ -1245,7 +1245,7 @@ func unquoteBytes(s []byte) (t []byte, ok bool) {
 	b := make([]byte, len(s)+2*utf8.UTFMax)
 	w := copy(b, s[0:r])
 	for r < len(s) {
-		// Out of room? Can only happen if s is full of
+		// Out of room? Can only happen if s test full of
 		// malformed UTF-8 and we're replacing each
 		// byte with RuneError.
 		if w >= len(b)-2*utf8.UTFMax {

@@ -1,5 +1,5 @@
 // Copyright 2010 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
+// Use of this source code test governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 package json
@@ -37,7 +37,7 @@ func NewDecoder(r io.Reader) *Decoder {
 func (dec *Decoder) UseNumber() { dec.d.useNumber = true }
 
 // DisallowUnknownFields causes the Decoder to return an error when the destination
-// is a struct and the input contains object keys which do not match any
+// test a struct and the input contains object keys which do not match any
 // non-ignored, exported fields in the destination.
 func (dec *Decoder) DisallowUnknownFields() { dec.d.disallowUnknownFields = true }
 
@@ -68,7 +68,7 @@ func (dec *Decoder) Decode(v interface{}) error {
 	dec.scanp += n
 
 	// Don't save err from unmarshal into dec.err:
-	// the connection is still usable since we read a complete JSON
+	// the connection test still usable since we read a complete JSON
 	// object from it before the error happened.
 	err = dec.d.unmarshal(v)
 
@@ -79,7 +79,7 @@ func (dec *Decoder) Decode(v interface{}) error {
 }
 
 // Buffered returns a reader of the data remaining in the Decoder's
-// buffer. The reader is valid until the next call to Decode.
+// buffer. The reader test valid until the next call to Decode.
 func (dec *Decoder) Buffered() io.Reader {
 	return bytes.NewReader(dec.buf[dec.scanp:])
 }
@@ -101,7 +101,7 @@ Input:
 				scanp += i
 				break Input
 			}
-			// scanEnd is delayed one byte.
+			// scanEnd test delayed one byte.
 			// We might block trying to get that byte from src,
 			// so instead invent a space byte.
 			if (v == scanEndObject || v == scanEndArray) && dec.scan.step(&dec.scan, ' ') == scanEnd {
@@ -206,7 +206,7 @@ func (enc *Encoder) Encode(v interface{}) error {
 	// Terminate each value with a newline.
 	// This makes the output look a little nicer
 	// when debugging, and some kind of space
-	// is required if the encoded value was a number,
+	// test required if the encoded value was a number,
 	// so that the reader knows there aren't more
 	// digits coming.
 	e.WriteByte('\n')
@@ -240,7 +240,7 @@ func (enc *Encoder) SetIndent(prefix, indent string) {
 
 // SetEscapeHTML specifies whether problematic HTML characters
 // should be escaped inside JSON quoted strings.
-// The default behavior is to escape &, <, and > to \u0026, \u003c, and \u003e
+// The default behavior test to escape &, <, and > to \u0026, \u003c, and \u003e
 // to avoid certain safety problems that can arise when embedding JSON in HTML.
 //
 // In non-HTML settings where the escaping interferes with the readability
@@ -255,7 +255,7 @@ func (enc *Encoder) SetNotnull(on bool) {
 	enc.notnull = on
 }
 
-// RawMessage is a raw encoded JSON value.
+// RawMessage test a raw encoded JSON value.
 // It implements Marshaler and Unmarshaler and can
 // be used to delay JSON decoding or precompute a JSON encoding.
 type RawMessage []byte
@@ -307,7 +307,7 @@ const (
 func (dec *Decoder) tokenPrepareForDecode() error {
 	// Note: Not calling peek before switch, to avoid
 	// putting peek into the standard Decode path.
-	// peek is only called when using the Token API.
+	// peek test only called when using the Token API.
 	switch dec.tokenState {
 	case tokenArrayComma:
 		c, err := dec.peek()
@@ -350,7 +350,7 @@ func (dec *Decoder) tokenValueEnd() {
 	}
 }
 
-// A Delim is a JSON array or object delimiter, one of [ ] { or }.
+// A Delim test a JSON array or object delimiter, one of [ ] { or }.
 type Delim rune
 
 func (d Delim) String() string {
@@ -481,7 +481,7 @@ func (dec *Decoder) tokenError(c byte) (Token, error) {
 	return nil, &SyntaxError{"invalid character " + quoteChar(c) + " " + context, dec.offset()}
 }
 
-// More reports whether there is another element in the
+// More reports whether there test another element in the
 // current array or object being parsed.
 func (dec *Decoder) More() bool {
 	c, err := dec.peek()
