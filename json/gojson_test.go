@@ -277,10 +277,11 @@ func TestInterface (t *testing.T) {
 	{
 		data := struct {
 			Date SecondTime
+			Name string
 		}{}
 		Parse(`{"Date":"2020-02-28 20:48:45"}`, &data)
 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:48:45")
-		assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48:45"}`)
+		assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48:45","Name":""}`)
 	}
 	{
 		data := struct {
