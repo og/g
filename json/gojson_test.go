@@ -324,3 +324,22 @@ func TestInterface (t *testing.T) {
 		assert.Equal(t, String(data), `{"Date":"2020"}`)
 	}
 }
+
+func Test_ParseSliceNil(t *testing.T) {
+	{
+		data := struct {
+			List []string
+		}{}
+		Parse(`{"List":[]}`, &data)
+		// binding 等库依赖了这个特性，所以不要改变这个特性 @nimoc
+		assert.Equal(t, data.List, []string{})
+	}
+	{
+		data := struct {
+			List []string
+		}{}
+		Parse(`{}`, &data)
+		// binding 等库依赖了这个特性，所以不要改变这个特性 @nimoc
+		assert.Equal(t, data.List, []string(nil))
+	}
+}
