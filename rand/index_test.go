@@ -3,7 +3,6 @@ package grand
 import (
 	"github.com/stretchr/testify/assert"
 	"log"
-	"strings"
 	"testing"
 )
 
@@ -24,14 +23,29 @@ func TestRandBySeed(t *testing.T) {
 		assert.Regexp(t, "c", result)
 		assert.Regexp(t, "d", result)
 	}
+	// {
+	// 	result := StringLetter(200)
+	// 	assert.Equal(t, 200, len(result))
+	// 	letterList := strings.Split("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLOMNOPQRSTUVWXYZ", "")
+	// 	for _, letter := range letterList {
+	// 		assert.Regexp(t, letter, result)
+	// 	}
+	// }
 	{
-		result := StringLetter(200)
-		assert.Equal(t, 200, len(result))
-		letterList := strings.Split("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLOMNOPQRSTUVWXYZ", "")
-		for _, letter := range letterList {
-			assert.Regexp(t, letter, result)
+		sList := []string{}
+		countHash := map[string]int{}
+		for i:=0; i<100000; i++ {
+			s := StringBySeed("1234567890", 10)
+			sList = append(sList, s)
+			count, has := countHash[s]
+			if !has {
+				countHash[s] = 0
+				count = 0
+			}
+			if count > 1 {
+				log.Fatalf("%s  count is  %v", s, count)
+			}
+			countHash[s] = count+1
 		}
-		log.Print(result)
 	}
-
 }
