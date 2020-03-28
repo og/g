@@ -16,5 +16,5 @@ func StringBySeed(seed string, size int) string {
 	return string(result)
 }
 func StringLetter (size int) string {
-	return StringBySeed("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLOMNOPQRSTUVWXYZ", size)
+	return StringBySeed("abcdefghijklmnopqrstuvwxyz", size)
 }
