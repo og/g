@@ -5,6 +5,7 @@ import (
 	ge "github.com/og/x/error"
 	"github.com/stretchr/testify/assert"
 	"log"
+	"os"
 	"strconv"
 	"testing"
 )
@@ -43,10 +44,16 @@ func TestGetStringWithError(t *testing.T) {
 		err := recover()
 		assert.Equal(t, true, err!=nil)
 	}()
-	n := ge.GetInt(gconv.StringInt("nimo"))
+	n := ge.Int(gconv.StringInt("nimo"))
 	assert.Equal(t, 0, n)
 }
 func TestGetString(t *testing.T) {
-	n := ge.GetInt(gconv.StringInt("123"))
+	n := ge.Int(gconv.StringInt("123"))
 	assert.Equal(t, 123, n)
+}
+
+
+func TestDefer(t *testing.T) {
+	file, err := os.Open("some.txt") ; _= err // 故意忽略 err
+	defer ge.Func(file.Close)
 }
