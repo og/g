@@ -1,15 +1,16 @@
 package grand
 
 import (
-	"math/rand"
-	"time"
+	"crypto/rand"
+	"math/big"
 )
-func BytesBySeed(seed []byte, size int) []byte {
-	var result []byte
-	seedLen := len(seed)
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+func StringBySeed(seed string, size int) string {
+	seedB := []byte(seed)
+	result := []byte("")
 	for i:=0; i<size; i++ {
-		result = append(result, seed[r.Intn(seedLen)])
+		randIndex, err :=rand.Int(rand.Reader, big.NewInt(int64(len(seed)))) ; if err !=nil {panic(err)}
+		result = append(result, seedB[randIndex.Int64()])
 	}
 	return result
 }

@@ -3,7 +3,6 @@ package grand
 import (
 	gis "github.com/og/x/test"
 	"github.com/stretchr/testify/assert"
-	"log"
 	"testing"
 )
 
@@ -17,8 +16,8 @@ func TestRandBySeed(t *testing.T) {
 	}
 	{
 		seed := "abcd"
-		result := StringBySeed(seed, 10)
-		assert.Equal(t, 10, len(result))
+		result := StringBySeed(seed, 20)
+		assert.Equal(t, 20, len(result))
 		assert.Regexp(t, "a", result)
 		assert.Regexp(t, "b", result)
 		assert.Regexp(t, "c", result)
@@ -36,7 +35,7 @@ func TestRandBySeed(t *testing.T) {
 				count = 0
 			}
 			if count > 1 {
-				log.Fatalf("%s  count is  %v", s, count)
+				t.Fatalf("%s  count is  %v", s, count)
 			}
 			countHash[s] = count+1
 		}
