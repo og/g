@@ -15,8 +15,8 @@ func TestRandBySeed(t *testing.T) {
 	}
 	{
 		seed := "abcd"
-		result := StringBySeed(seed, 10)
-		assert.Equal(t, 10, len(result))
+		result := StringBySeed(seed, 20)
+		assert.Equal(t, 20, len(result))
 		assert.Regexp(t, "a", result)
 		assert.Regexp(t, "b", result)
 		assert.Regexp(t, "c", result)
