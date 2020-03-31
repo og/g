@@ -10,10 +10,9 @@ github.com/kardianos/govendor v1.0.9/go.mod h1:yvmR6q9ZZ7nSF5Wvh40v0wfP+3TwwL8zY
 github.com/matryer/is v1.2.0 h1:92UTHpy8CDwaJ08GqLDzhhuixiBUUD1p3AU6PHddz4A=
 github.com/matryer/is v1.2.0/go.mod h1:2fLPjFQM9rhQ15aVEtbuwhJinnOqrmgXPNdZsdwlWXA=
 github.com/og/x v0.0.0-20200102034047-45ae3cda9792/go.mod h1:9CPknqm4VhKaQKRcllH3pCVAz4Wj0yfuRBKEXw37rxw=
-github.com/og/x/json v0.0.0-20190911074324-46c1b3e856fb h1:kSrSKYC6DFpQ1PcPO71Y+T09O74ajhLW/Zen8t4pdvc=
 github.com/og/x/json v0.0.0-20190911074324-46c1b3e856fb/go.mod h1:bZrrjE/DSoVtxVFWtDHU1BD82zwiheYZSSjCFWHEm70=
-github.com/og/x/json v0.0.0-20200228142810-5bec755bfb13 h1:9Zgq9mop/5+xGYZ2F18qVG3vMLtkPRGD1sxgw7B77fY=
-github.com/og/x/json v0.0.0-20200228142810-5bec755bfb13/go.mod h1:gcYUIgxOtIITHViuIilfUch7h7Stzt2+4J1neXDhDto=
+github.com/og/x/json v0.0.0-20200328105910-6c65c720db7e h1:AOAgJN6pLHk0RAPnn2wXh/WMKubF8bFlIGmRVqdWRCs=
+github.com/og/x/json v0.0.0-20200328105910-6c65c720db7e/go.mod h1:gcYUIgxOtIITHViuIilfUch7h7Stzt2+4J1neXDhDto=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
