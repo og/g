@@ -5,7 +5,7 @@ import (
 	"math/big"
 )
 
-func StringBySeed(seed string, size int) string {
+func BytesBySeed(seed []byte, size int) []byte {
 	seedB := []byte(seed)
 	result := []byte("")
 	for i:=0; i<size; i++ {
@@ -14,6 +14,7 @@ func StringBySeed(seed string, size int) string {
 	}
 	return result
 }
+
 func StringBySeed(seedString string, size int) string {
 	return string(BytesBySeed([]byte(seedString), size))
 }
