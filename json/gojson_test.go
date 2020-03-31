@@ -77,9 +77,9 @@ func TestStringSpace(t *testing.T) {
 	}
 }
 
-func TestByte(t *testing.T) {
+func TestBytes(t *testing.T) {
 	{
-		json := Byte(user)
+		json := Bytes(user)
 		assert.Equal(t, []byte(userJSON), json)
 	}
 	{
@@ -87,12 +87,12 @@ func TestByte(t *testing.T) {
 			Name: "nimo",
 			Age: 27,
 		}
-		json, err := ByteWithErr(user)
+		json, err := BytesWithErr(user)
 		assert.Equal(t, []byte(userJSON), json)
 		assert.Equal(t, nil, err)
 	}
 	{
-		json, err := ByteWithErr(log.Print)
+		json, err := BytesWithErr(log.Print)
 		assert.Equal(t, []byte(nil), json)
 		if err == nil {
 			panic("ByteWithErr(log.Print) should return error")
@@ -172,7 +172,7 @@ func TestParseByte(t *testing.T) {
 	{
 		{
 			var user User
-			ParseByte([]byte(userJSON), &user)
+			ParseBytes([]byte(userJSON), &user)
 			assert.Equal(t, User{
 				Name: "nimo",
 				Age: 27,
@@ -180,7 +180,7 @@ func TestParseByte(t *testing.T) {
 		}
 		{
 			var user User
-			ParseByte([]byte(userJSON), user)  // not pointer
+			ParseBytes([]byte(userJSON), user)  // not pointer
 			assert.Equal(t, User{
 				Name: "",
 				Age: 0,
@@ -190,7 +190,7 @@ func TestParseByte(t *testing.T) {
 	{
 		{
 			var user User
-			ParseByte([]byte(userJSON), &user)
+			ParseBytes([]byte(userJSON), &user)
 			assert.Equal(t, User{
 				Name: "nimo",
 				Age: 27,
@@ -199,7 +199,7 @@ func TestParseByte(t *testing.T) {
 
 		{
 			var user User
-			err := ParseByteWithErr([]byte(``), &user)
+			err := ParseBytesWithErr([]byte(``), &user)
 			assert.Equal(t, User{
 				Name: "",
 				Age: 0,
@@ -211,7 +211,7 @@ func TestParseByte(t *testing.T) {
 
 		{
 			var user User
-			err := ParseByteWithErr([]byte(userJSON), user) // not pointer
+			err := ParseBytesWithErr([]byte(userJSON), user) // not pointer
 			assert.Equal(t, User{
 				Name: "",
 				Age: 0,
@@ -221,7 +221,7 @@ func TestParseByte(t *testing.T) {
 
 		{
 			var user User
-			err := ParseByteWithErr([]byte(``), user) // not pointer
+			err := ParseBytesWithErr([]byte(``), user) // not pointer
 			assert.Equal(t, User{
 				Name: "",
 				Age: 0,

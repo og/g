@@ -48,13 +48,13 @@ func StringSpaceWithErr(v interface{}, space int) (jsonString string, err error)
 	jsonString = string(bjson)
 	return
 }
-func Byte(v interface{}) []byte {
+func Bytes(v interface{}) []byte {
 	bjson, err := json.Marshal(v)
 	if err != nil { panic(err) }
 	return bjson
 }
 // encode to []byte (with error)
-func ByteWithErr(v interface{}) ([]byte, error) {
+func BytesWithErr(v interface{}) ([]byte, error) {
 	return json.Marshal(v)
 }
 
@@ -79,14 +79,14 @@ func ParseWithErr(jsonString string,  v interface{}) (err error) {
 // Parse([]byte(`{"name":"nimo"}`), &user)
 // in the value pointed to by v. If v test nil or not a pointer,
 // Parse returns an InvalidUnmarshalError.
-func ParseByte (data []byte, v interface{}) {
-	err := ParseByteWithErr(data, &v); if err != nil { panic(err) }
+func ParseBytes (data []byte, v interface{}) {
+	err := ParseBytesWithErr(data, &v); if err != nil { panic(err) }
 }
 // decode by []byte (with error)
 // equal json.Unmarshal(data []byte, v interface{}) error
 // in the value pointed to by v. If v test nil or not a pointer,
 // Parse returns an InvalidUnmarshalError.
-func ParseByteWithErr (data []byte, v interface{}) (err error) {
+func ParseBytesWithErr (data []byte, v interface{}) (err error) {
 	err = json.Unmarshal(data, &v)
 	return
 }
