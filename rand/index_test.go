@@ -1,6 +1,7 @@
 package grand
 
 import (
+	gis "github.com/og/x/test"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
@@ -23,14 +24,6 @@ func TestRandBySeed(t *testing.T) {
 		assert.Regexp(t, "c", result)
 		assert.Regexp(t, "d", result)
 	}
-	// {
-	// 	result := StringLetter(200)
-	// 	assert.Equal(t, 200, len(result))
-	// 	letterList := strings.Split("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLOMNOPQRSTUVWXYZ", "")
-	// 	for _, letter := range letterList {
-	// 		assert.Regexp(t, letter, result)
-	// 	}
-	// }
 	{
 		sList := []string{}
 		countHash := map[string]int{}
@@ -48,4 +41,9 @@ func TestRandBySeed(t *testing.T) {
 			countHash[s] = count+1
 		}
 	}
+}
+
+func TestLetterBytes(t  *testing.T) {
+	is := gis.New(t)
+	is.Eql(string(letterBytes()), "abcdefghijklmnopqrstuvwxyz")
 }
