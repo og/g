@@ -2,7 +2,6 @@ package grand
 
 import (
 	"github.com/stretchr/testify/assert"
-	"log"
 	"testing"
 )
 
@@ -43,7 +42,7 @@ func TestRandBySeed(t *testing.T) {
 				count = 0
 			}
 			if count > 1 {
-				log.Fatalf("%s  count is  %v", s, count)
+				t.Fatalf("%s  count is  %v", s, count)
 			}
 			countHash[s] = count+1
 		}
