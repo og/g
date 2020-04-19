@@ -183,7 +183,7 @@ func (err ErrPhoto) dict() (dict struct {
 	return
 }
 func newErrPhoto(kind string) (err ErrPhoto) {
-	dict := ErrPhoto{}.dict()
+	dict := err.dict()
 	switch kind {
 	default:
 		// 这种情况下是包开发者代码写漏了kind判断，应该 panic 。
@@ -200,6 +200,7 @@ func newErrPhoto(kind string) (err ErrPhoto) {
 	err.MaxPhotoMBLimit = maxPhotoMBLimit
 	return
 }
+// 预留接口,在需要  interface error 时调用 IError()
 func (err *ErrPhoto) IError() error {
 	if err.isFail {
 		return err 
