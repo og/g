@@ -1,6 +1,7 @@
 package ge
 
 import (
+	"os"
 	"time"
 )
 
@@ -71,4 +72,9 @@ func Time(v time.Time, err error) time.Time {
 }
 func Func(closeFunc func () error) {
 	Check(closeFunc())
+}
+
+func File(file *os.File, err error) *os.File {
+	Check(err)
+	return file
 }
