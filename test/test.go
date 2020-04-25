@@ -1,55 +1,70 @@
-package gis
+package gtest
 
 import (
-	is "github.com/og/x/test/lib"
+	"github.com/stretchr/testify/assert"
+	"regexp"
 	"testing"
 )
 
-type Test struct {
-	core *is.I
+type Assert struct {
+	T *testing.T
 }
-func New(t *testing.T) Test {
-	return Test{core: is.New(t)}
+func AS(t *testing.T) *Assert {
+	return &Assert{T: t}
 }
-func (gt Test)Eql(a interface{}, b interface{}) {
-	gt.core.Equal(a, b)
+func (as Assert) Eql(expected, actual interface{}, msgAndArgs ...interface{}) {
+	assert.Equal(as.T,expected, actual, msgAndArgs...)
 }
-func (gt Test)Fail(a interface{}, b interface{}) {
-	gt.core.Fail()
+func (as Assert) NoErrorSecond(v interface{}, err error) interface{} {
+	as.NoError(err)
+	return v
 }
-func (gt Test) NoErr(err error) {
-	gt.core.NoErr(err)
+func (as Assert) HasErrorSecond(v interface{}, err error) interface{} {
+	as.HasError(err)
+	return v
 }
-func (gt Test) Err(err error) {
-	if err == nil {
-		gt.core.Logf("err: should not be nil")
-	}
-}
-func (gt Test) True(expression bool) {
-	gt.core.True(expression)
-}
-func (gt Test) False(expression bool) {
-	gt.core.True(!expression)
-}
-type Flow struct {
-	Actual interface{}
-	Test Test
-}
-func (self Flow) Expect(v interface{}) {
-	self.Test.Eql(self.Actual, v)
 
+func (as Assert) NoError(err error , msgAndArgs ...interface{}) {
+	assert.NoError(as.T, err, msgAndArgs...)
 }
-func (gt Test) EqlAndNoErr(actual interface{}, err error) Flow {
-	gt.NoErr(err)
-	return Flow{
-		Actual: actual,
-		Test: gt,
-	}
+func (as Assert) HasError( err error, msgAndArgs ...interface{}) {
+	assert.Error(as.T, err, msgAndArgs...)
 }
-func (gt Test) EqlAndErr(actual interface{}, err error) Flow {
-	gt.Err(err)
-	return Flow{
-		Actual: actual,
-		Test: gt,
-	}
+func (as Assert) EqualError(theError error, errString string, msgAndArgs ...interface{}) {
+	assert.EqualError(as.T, theError, errString, msgAndArgs...)
+}
+func (as Assert) True(expression bool, msgAndArgs ...interface{}) {
+	assert.True(as.T, expression, msgAndArgs...)
+}
+func (as Assert) False(expression bool, msgAndArgs ...interface{}) {
+	assert.False(as.T, expression, msgAndArgs...)
+}
+func (as Assert) Len(sliceValue interface{}, len int, msgAndArgs ...interface{}){
+	assert.Len(as.T, sliceValue, len, msgAndArgs...)
+}
+func (as Assert) Zero(i interface{}, msgAndArgs ...interface{}){
+	assert.Zero(as.T, i, msgAndArgs...)
+}
+func (as Assert) RegexpString(regexpString string, str interface{}, msgAndArgs ...interface{}){
+	assert.Regexp(as.T, regexpString, str, msgAndArgs...)
+}
+func (as Assert) Regexp(regexp *regexp.Regexp, str interface{}, msgAndArgs ...interface{}){
+	assert.Regexp(as.T, regexp, str, msgAndArgs...)
+}
+func (as Assert) StringContains(fullString string, subString string, msgAndArgs ...interface{}){
+	assert.Contains(as.T, fullString, subString, msgAndArgs...)
+}
+func (as Assert) StringSliceContains(stringSlice []string, subString string, msgAndArgs ...interface{}){
+	assert.Contains(as.T, stringSlice, subString, msgAndArgs...)
+}
+func (as Assert) DirExists(path string, msgAndArgs ...interface{}) {
+	assert.DirExists(as.T, path, msgAndArgs...)
+}
+// ElementsMatch asserts that the specified listA(array, slice...) is equal to specified
+// listB(array, slice...) ignoring the order of the elements. If there are duplicate elements,
+// the number of appearances of each of them in both lists should match.
+//
+// as.ElementsMatch(t, [1, 3, 2, 3], [1, 3, 3, 2])
+func (as Assert) ElementsMatch(listA, listB interface{}, msgAndArgs ...interface{}) (ok bool) {
+	return assert.ElementsMatch(as.T, listA, listB, msgAndArgs...)
 }

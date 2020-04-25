@@ -1,33 +1,33 @@
-package gis_test
+package gtest_test
+
 import (
-	"encoding/json"
-	"errors"
-	gis "github.com/og/x/test"
+	json "github.com/og/x/json/lib"
+	gtest "github.com/og/x/test"
+	"log"
 	"testing"
 )
 
-func TestTest_EqlAndNoErr(t *testing.T) {
-	is := gis.New(t)
-	is.EqlAndNoErr(json.Marshal(map[string]int{})).
-		Expect([]byte(`{}`))
-
-	ch := make(chan int)
-	is.EqlAndErr(json.Marshal(ch)).
-		Expect(nil)
-}
-
-func TestTest_True_False(t *testing.T) {
-	is := gis.New(t)
-	is.True(true)
-	is.False(false)
-}
-func TestTest_Eql(t *testing.T) {
-	is := gis.New(t)
-	is.Eql("a", "a")
-}
-func TestTest_Err(t *testing.T) {
-	is := gis.New(t)
-	is.Err(errors.New("err"))
-	var err error
-	is.NoErr(err)
+func TestAS(t *testing.T) {
+	as := gtest.AS(t)
+	// 不使用 NoErrorSecond
+	{
+		b , err := json.Marshal("a")
+		as.NoError(err)
+		as.Eql([]byte(`"a"`), b)
+	}
+	// 使用 NoErrorSecond
+	{
+		as.Eql([]byte(`"a"`), as.NoErrorSecond(json.Marshal("a")))
+	}
+	// 不使用 HasErrorSecond
+	{
+		b , err := json.Marshal(log.Print)
+		as.HasError(err)
+		as.Eql([]byte(nil), b)
+	}
+	// 使用 HasErrorSecond
+	{
+		// eql 是为了检查空值
+		as.Eql([]byte(nil), as.HasErrorSecond(json.Marshal(log.Print)))
+	}
 }
