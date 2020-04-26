@@ -93,3 +93,18 @@ func (as Assert) Run(n int, fn func(i int) (_break bool) ) {
 		}
 	}
 }
+func (as Assert) Nil(v interface{}, msg ...interface{}) {
+	assert.Nil(as.T, v, msg...)
+}
+func (as Assert) NotNil(v interface{}, msg ...interface{}) {
+	assert.NotNil(as.T, v, msg...)
+}
+func (as Assert) Panic(fn func ()) (recoverValue interface{})  {
+	defer func() {
+		r := recover()
+		as.NotNil(r)
+		recoverValue = r
+	}()
+	fn()
+	return
+}

@@ -1,6 +1,7 @@
 package gtest_test
 
 import (
+	"errors"
 	json "github.com/og/x/json/lib"
 	gtest "github.com/og/x/test"
 	"log"
@@ -30,4 +31,15 @@ func TestAS(t *testing.T) {
 		// eql 是为了检查空值
 		as.Eql([]byte(nil), as.HasErrorSecond(json.Marshal(log.Print)))
 	}
+	{
+		as.Eql(errors.New("abc"), as.Panic(MockPanic))
+		as.Eql("abc", as.Panic(MockPanicString))
+	}
+}
+
+func MockPanic() {
+	panic(errors.New("abc"))
+}
+func MockPanicString() {
+	panic("abc")
 }
