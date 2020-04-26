@@ -1,7 +1,7 @@
 package grand
 
 import (
-	gis "github.com/og/x/test"
+	gtest "github.com/og/x/test"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -43,6 +43,6 @@ func TestRandBySeed(t *testing.T) {
 }
 
 func TestLetterBytes(t  *testing.T) {
-	is := gis.New(t)
-	is.Eql(string(letterBytes()), "abcdefghijklmnopqrstuvwxyz")
+	as := gtest.AS(t)
+	as.Eql(string(letterBytes()), "abcdefghijklmnopqrstuvwxyz")
 }

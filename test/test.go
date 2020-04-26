@@ -84,3 +84,12 @@ func (as Assert) Lt(v int, expect int, msg ...interface{}) {
 func (as Assert) LtOrEql(v int, expect int, msg ...interface{}) {
 	assert.LessOrEqual(as.T, v , expect, msg...)
 }
+
+// This is a very simple implementation, see the source code to better understand the role
+func (as Assert) Run(n int, fn func(i int) (_break bool) ) {
+	for i:=0; i<n; i++ {
+		if fn(i) {
+			break
+		}
+	}
+}
