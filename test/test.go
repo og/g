@@ -31,8 +31,11 @@ func (as AS) NoError(err error , msg ...interface{}) {
 func (as AS) HasError( err error, msg ...interface{}) {
 	assert.Error(as.T, err, msg...)
 }
-func (as AS) EqualError(theError error, errString string, msg ...interface{}) {
+func (as AS) ErrorString(theError error, errString string, msg ...interface{}) {
 	assert.EqualError(as.T, theError, errString, msg...)
+}
+func (as AS) Error(theError error, err error, msg ...interface{}) {
+	assert.EqualError(as.T, theError, err.Error(), msg...)
 }
 func (as AS) True(expression bool, msg ...interface{}) {
 	assert.True(as.T, expression, msg...)
