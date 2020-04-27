@@ -9,31 +9,33 @@ import (
 )
 
 func TestAS(t *testing.T) {
-	as := gtest.AS(t)
+	as := gtest.NewAS(t)
 	// 不使用 NoErrorSecond
 	{
 		b , err := json.Marshal("a")
 		as.NoError(err)
-		as.Eql([]byte(`"a"`), b)
+		as.Equal([]byte(`"a"`), b)
 	}
 	// 使用 NoErrorSecond
 	{
-		as.Eql([]byte(`"a"`), as.NoErrorSecond(json.Marshal("a")))
+		as.Equal([]byte(`"a"`), as.NoErrorSecond(json.Marshal("a")))
 	}
 	// 不使用 HasErrorSecond
 	{
 		b , err := json.Marshal(log.Print)
 		as.HasError(err)
-		as.Eql([]byte(nil), b)
+		as.Equal([]byte(nil), b)
 	}
 	// 使用 HasErrorSecond
 	{
 		// eql 是为了检查空值
-		as.Eql([]byte(nil), as.HasErrorSecond(json.Marshal(log.Print)))
+		as.Equal([]byte(nil), as.HasErrorSecond(json.Marshal(log.Print)))
 	}
 	{
-		as.Eql(errors.New("abc"), as.Panic(MockPanic))
-		as.Eql("abc", as.Panic(MockPanicString))
+		as.Equal(errors.New("abc"), as.Panic(MockPanic))
+		as.Equal("abc", as.Panic(MockPanicString))
+		as.PanicError(errors.New("abc"), MockPanic)
+		as.PanicErrorString("abc", MockPanic)
 	}
 }
 
