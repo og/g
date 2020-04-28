@@ -83,34 +83,36 @@ func TestStringList_Unshift(t *testing.T) {
 	sList.Unshift("b")
 	assert.Equal(t, []string{"b", "a"}, sList.Value)
 }
-func TestStringList_Some(t *testing.T) {
+func TestStringList_Find(t *testing.T) {
 	{
 		sList := StringList{[]string{"a","b","c"}}
 		var eachIndexList []int
-		result := sList.Some(func(index int, item string) bool {
+		resultIndex, result := sList.Find(func(index int, item string) bool {
 			eachIndexList = append(eachIndexList, index)
 			return item == "b"
 		})
+		assert.Equal(t, 1, resultIndex)
 		assert.Equal(t, true, result)
 		assert.Equal(t, []int{0,1}, eachIndexList)
 	}
 	{
 		sList := StringList{[]string{"a","b","c"}}
 		var eachIndexList []int
-		result := sList.Some(func(index int, item string) bool {
+		resultIndex, result := sList.Find(func(index int, item string) bool {
 			eachIndexList = append(eachIndexList, index)
 			return item == "z"
 		})
+		assert.Equal(t, -1, resultIndex)
 		assert.Equal(t, false, result)
 		assert.Equal(t, []int{0,1,2}, eachIndexList)
 	}
 }
 
-func TestStringList_Every(t *testing.T) {
+func TestStringList_CheckAll(t *testing.T) {
 	{
 		sList := StringList{[]string{"a","b","c"}}
 		var eachIndexList []int
-		result := sList.Every(func(index int, item string) bool {
+		result := sList.CheckAll(func(index int, item string) bool {
 			eachIndexList = append(eachIndexList, index)
 			return len(item) == 1
 		})
@@ -120,7 +122,7 @@ func TestStringList_Every(t *testing.T) {
 	{
 		sList := StringList{[]string{"a","bb","c"}}
 		var eachIndexList []int
-		result := sList.Every(func(index int, item string) bool {
+		result := sList.CheckAll(func(index int, item string) bool {
 			eachIndexList = append(eachIndexList, index)
 			return len(item) == 1
 		})

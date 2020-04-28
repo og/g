@@ -73,19 +73,21 @@ func (sList *StringList) ShiftBind(first *StringListBindValue) StringList {
 	sList.Value = sList.Value[1:]
 	return *sList
 }
-type StringListSome func(index int, item string) bool
-func (sList StringList) Some(callback StringListSome) bool {
+func (sList StringList) Find(callback func(index int, item string) (find bool)) (foundIndex int, found bool) {
+	foundIndex = -1
 	for index, item := range sList.Value {
 		if callback(index, item) {
-			return true
+			foundIndex = index
+			found = true
+			return
 		}
 	}
-	return false
+	return
 }
 
 
-type StringListEvery func(index int, item string) bool
-func (sList StringList) Every(callback StringListEvery) bool {
+
+func (sList StringList) CheckAll(callback func(index int, item string) (pass bool)) (allPass bool) {
 	for index, item := range sList.Value {
 		if !callback(index, item) {
 			return false
@@ -97,10 +99,11 @@ func (sList StringList) Join(sep string) string {
 	return strings.Join(sList.Value, sep)
 }
 func (sList StringList) In (valueToFind string) bool {
-	return sList.Some(func(_ int, item string) bool {
+	_, find := sList.Find(func(_ int, item string) bool {
 		if item == valueToFind {
 			return true
 		}
 		return false
 	})
+	return find
 }
