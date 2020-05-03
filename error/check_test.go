@@ -52,9 +52,3 @@ func TestGetString(t *testing.T) {
 	n := ge.Int(gconv.StringInt("123"))
 	assert.Equal(t, 123, n)
 }
-
-
-func TestDefer(t *testing.T) {
-	file, err := os.Open("some.txt") ; _= err // 故意忽略 err
-	defer ge.Func(file.Close)
-}
