@@ -16,6 +16,9 @@ func NewAS(t *testing.T) *AS {
 func (as AS) Equal(expected, actual interface{}, msg ...interface{}) {
 	assert.Equal(as.T,expected, actual, msg...)
 }
+func (as AS) NotEqual(expected, actual interface{}, msg ...interface{}) {
+	assert.NotEqual(as.T, expected, actual, msg...)
+}
 func (as AS) NoErrorSecond(v interface{}, err error) interface{} {
 	as.NoError(err)
 	return v

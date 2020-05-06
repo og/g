@@ -70,10 +70,6 @@ func Time(v time.Time, err error) time.Time {
 	Check(err)
 	return v
 }
-func Func(closeFunc func () error) {
-	Check(closeFunc())
-}
-
 func File(file *os.File, err error) *os.File {
 	Check(err)
 	return file
