@@ -13,9 +13,18 @@ func SHA512(s string) string {
 	hash.Write([]byte(s))
 	return hex.EncodeToString(hash.Sum(nil))
 }
-func SaltSHA512(password string, salt string) (hash string) {
-	return SHA512(password + salt)
+type SaltEncode struct {
+	Password string
+	Salt string
 }
-func CheckSaltSHA512(password string, salt string, hash string) bool {
-	return SHA512(password + salt) == hash
+func SaltSHA512(encode SaltEncode) (hash string) {
+	return SHA512(encode.Password + encode.Salt)
+}
+type SaltDecode struct {
+	Password string
+	Salt string
+	Hash string
+}
+func CheckSaltSHA512(decode SaltDecode) bool {
+	return SHA512(decode.Password + decode.Salt) == decode.Hash
 }
