@@ -12,7 +12,7 @@ type ServiceLogicError struct {
 	Message string
 }
 // 封装 Reject 是为了消除直接使用 greject.ServiceLogic 的 interface{}
-func Reject(response ServiceLogicError) greject.Service {
+func Reject(response ServiceLogicError) error {
 	return greject.Service{ServiceResponse: response}
 }
 // 每个团队的错误响应不一致,所以在项目中自定义
