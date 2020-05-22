@@ -16,6 +16,13 @@ func getSpace(count int) string {
 }
 var newLine = string('\n')
 func V(v ...interface{}) {
+	defer func() {
+		// 此函数绝对不能出错
+		r := recover()
+		if r != nil {
+			log.Print(v)
+		}
+	}()
 	var sList glist.StringList
 	_, file, line, _ := runtime.Caller(1)
 	sList.Push(file, ":", strconv.Itoa(line), newLine)
