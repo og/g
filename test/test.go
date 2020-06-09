@@ -1,7 +1,6 @@
 package gtest
 
 import (
-	"errors"
 	"github.com/stretchr/testify/assert"
 	"regexp"
 	"testing"
@@ -115,9 +114,8 @@ func (as AS) Panic(fn func ()) (recoverValue interface{})  {
 	fn()
 	return
 }
-func (as AS) PanicErrorString(expectErrorString string, fn func ())  {
-	as.Equal(errors.New(expectErrorString), as.Panic(fn))
-}
-func (as AS) PanicError(expectError error, fn func ())  {
-	as.Equal(expectError, as.Panic(fn))
+func (as AS) PanicError(expectErrorString string, fn func ())  {
+	r := as.Panic(fn)
+	err := r.(error)
+	as.Equal(expectErrorString,err.Error())
 }
