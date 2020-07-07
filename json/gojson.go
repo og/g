@@ -1,4 +1,4 @@
-package gjson
+package ogjson
 
 import (
 	ogjson "github.com/og/x/json/core"

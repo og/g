@@ -1,4 +1,4 @@
-package gjson
+package ogjson
 
 import (
 	"github.com/stretchr/testify/assert"

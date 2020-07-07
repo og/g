@@ -2,13 +2,13 @@
 // Use of this source code test governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package ogjson implements encoding and decoding of JSON as defined in
+// package core_ogjson implements encoding and decoding of JSON as defined in
 // RFC 7159. The mapping between JSON and Go values test described
 // in the documentation for the Marshal and Unmarshal functions.
 //
 // See "JSON and Go" for an introduction to this package:
 // https://golang.org/doc/articles/json_and_go.html
-package ogjson
+package core_ogjson
 
 import (
 	"bytes"

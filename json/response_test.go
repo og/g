@@ -1,4 +1,4 @@
-package gjson_test
+package ogjson_test
 
 import (
 	gjson "github.com/og/x/json"

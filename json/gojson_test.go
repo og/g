@@ -1,4 +1,4 @@
-package gjson
+package ogjson
 
 import (
 	gtime "github.com/og/x/time"

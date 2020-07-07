@@ -1,4 +1,4 @@
-package gjson
+package ogjson
 
 
 type Out struct {
