@@ -13,7 +13,7 @@ func ExampleStringKeys() {
 		"lang": "go",
 	}
 
-	for _, key := range UnsafeKeys(sMap).String() {
+	for _, key := range StringStringKeys(sMap) {
 		log.Print(key+":"+sMap[key])
 	}
 	// lang:go
@@ -88,4 +88,13 @@ func TestMap(t *testing.T) {
 	bjson, _ := json.Marshal(Any{"name":"nimo"})
 	sjson := string(bjson)
 	assert.Equal(t, `{"name":"nimo"}`,sjson)
+}
+func TestUnsafeKeys(t *testing.T) {
+	hash := map[string]int{
+		"a": 1,
+		"b": 2,
+	}
+
+	keyList := UnsafeKeys(hash).String() ; _ = hash[keyList[0]]
+	assert.Equal(t, []string{"a","b"}, keyList)
 }

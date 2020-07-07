@@ -43,6 +43,8 @@ func (kList keyList) Float64() (keys []float64) {
 }
 //
 // 通过 UnsafeKeys(map[keyType]valueType).keyType()语法可以获取 map 的key列表
+// UnsafeKeys 必须与类型验证成对使用
+// keys = UnsafeKeys(data).String() ; _= data[keys[0]] // data[keys[0]] 是一种类型验证，消除类型不安全代码造成的影响
 // 例如:
 // 	data := map[string]string{"a":"1","b":"2"}
 // 	UnsafeKeys(data).String() //  []strings{"a","b"}
