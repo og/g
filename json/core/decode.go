@@ -5,7 +5,7 @@
 // Represents JSON data structure using native Go types: booleans, floats,
 // strings, arrays, and maps.
 
-package json
+package ogjson
 
 import (
 	"bytes"
@@ -93,7 +93,7 @@ import (
 // Instead, they are replaced by the Unicode replacement
 // character U+FFFD.
 //
-func Unmarshal(data []byte, v interface{}) error {
+func Unmarshal(data []byte, v interface{}, tag string) error {
 	// Check for well-formedness.
 	// Avoids filling out half a data structure
 	// before discovering a JSON syntax error.
@@ -104,7 +104,7 @@ func Unmarshal(data []byte, v interface{}) error {
 	}
 
 	d.init(data)
-	return d.unmarshal(v)
+	return d.unmarshal(v, tag)
 }
 
 // Unmarshaler test the interface implemented by types
@@ -167,7 +167,7 @@ func (e *InvalidUnmarshalError) Error() string {
 	return "json: Unmarshal(nil " + e.Type.String() + ")"
 }
 
-func (d *decodeState) unmarshal(v interface{}) error {
+func (d *decodeState) unmarshal(v interface{}, tag string) error {
 	rv := reflect.ValueOf(v)
 	if rv.Kind() != reflect.Ptr || rv.IsNil() {
 		return &InvalidUnmarshalError{reflect.TypeOf(v)}
@@ -177,7 +177,7 @@ func (d *decodeState) unmarshal(v interface{}) error {
 	d.scanWhile(scanSkipSpace)
 	// We decode rv not rv.Elem because the Unmarshaler interface
 	// test must be applied at the top level of the value.
-	err := d.value(rv)
+	err := d.value(rv, tag)
 	if err != nil {
 		return err
 	}
@@ -363,14 +363,14 @@ func (d *decodeState) scanWhile(op int) {
 // value consumes a JSON value from d.data[d.off-1:], decoding into v, and
 // reads the following byte ahead. If v test invalid, the value test discarded.
 // The first byte of the value has been read already.
-func (d *decodeState) value(v reflect.Value) error {
+func (d *decodeState) value(v reflect.Value, tag string) error {
 	switch d.opcode {
 	default:
 		return errPhase
 
 	case scanBeginArray:
 		if v.IsValid() {
-			if err := d.array(v); err != nil {
+			if err := d.array(v, tag); err != nil {
 				return err
 			}
 		} else {
@@ -380,7 +380,7 @@ func (d *decodeState) value(v reflect.Value) error {
 
 	case scanBeginObject:
 		if v.IsValid() {
-			if err := d.object(v); err != nil {
+			if err := d.object(v, tag); err != nil {
 				return err
 			}
 		} else {
@@ -505,7 +505,7 @@ func indirect(v reflect.Value, decodingNull bool) (Unmarshaler, encoding.TextUnm
 
 // array consumes an array from d.data[d.off-1:], decoding into v.
 // The first byte of the array ('[') has been read already.
-func (d *decodeState) array(v reflect.Value) error {
+func (d *decodeState) array(v reflect.Value, tag string) error {
 	// Check for unmarshaler.
 	u, ut, pv := indirect(v, false)
 	if u != nil {
@@ -570,12 +570,12 @@ func (d *decodeState) array(v reflect.Value) error {
 
 		if i < v.Len() {
 			// Decode into element.
-			if err := d.value(v.Index(i)); err != nil {
+			if err := d.value(v.Index(i), tag); err != nil {
 				return err
 			}
 		} else {
 			// Ran out of fixed array: skip.
-			if err := d.value(reflect.Value{}); err != nil {
+			if err := d.value(reflect.Value{}, tag); err != nil {
 				return err
 			}
 		}
@@ -615,7 +615,7 @@ var textUnmarshalerType = reflect.TypeOf(new(encoding.TextUnmarshaler)).Elem()
 
 // object consumes an object from d.data[d.off-1:], decoding into v.
 // The first byte ('{') of the object has been read already.
-func (d *decodeState) object(v reflect.Value) error {
+func (d *decodeState) object(v reflect.Value, tag string) error {
 	// Check for unmarshaler.
 	u, ut, pv := indirect(v, false)
 	if u != nil {
@@ -707,7 +707,7 @@ func (d *decodeState) object(v reflect.Value) error {
 			subv = mapElem
 		} else {
 			var f *field
-			fields := cachedTypeFields(v.Type())
+			fields := cachedTypeFields(v.Type(), tag)
 			for i := range fields {
 				ff := &fields[i]
 				if bytes.Equal(ff.nameBytes, key) {
@@ -777,7 +777,7 @@ func (d *decodeState) object(v reflect.Value) error {
 				d.saveError(fmt.Errorf("json: invalid use of ,string struct tag, trying to unmarshal unquoted value into %v", subv.Type()))
 			}
 		} else {
-			if err := d.value(subv); err != nil {
+			if err := d.value(subv, tag); err != nil {
 				return err
 			}
 		}

@@ -1,4 +1,4 @@
-package json
+package ogjson
 
 var defalutNotnull = true
 

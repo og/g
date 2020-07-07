@@ -8,7 +8,7 @@
 // We benchmark converting between the JSON form
 // and in-memory data structures.
 
-package json
+package ogjson
 
 import (
 	"bytes"
@@ -305,7 +305,7 @@ func BenchmarkTypeFieldsCache(b *testing.B) {
 					wg.Add(1)
 					go func(j int) {
 						for _, t := range ts[(j*len(ts))/nc : ((j+1)*len(ts))/nc] {
-							cachedTypeFields(t)
+							cachedTypeFields(t, "json")
 						}
 						wg.Done()
 					}(j)
@@ -321,12 +321,12 @@ func BenchmarkTypeFieldsCache(b *testing.B) {
 		// Pre-warm a cache of size nt.
 		clearCache()
 		for _, t := range types[:nt] {
-			cachedTypeFields(t)
+			cachedTypeFields(t, "json")
 		}
 		b.Run(fmt.Sprintf("HitTypes%d", nt), func(b *testing.B) {
 			b.RunParallel(func(pb *testing.PB) {
 				for pb.Next() {
-					cachedTypeFields(types[0])
+					cachedTypeFields(types[0], "json")
 				}
 			})
 		})
