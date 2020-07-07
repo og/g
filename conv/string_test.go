@@ -11,9 +11,18 @@ func TestStringInt(t *testing.T) {
 	assert.Equal(t, nil, err)
 }
 func TestStringInt64(t *testing.T) {
-	i64 , err := StringInt64("123")
-	assert.Equal(t, int64(123), i64)
-	assert.Equal(t, nil, err)
+	{
+		i64 , err := StringInt64("123")
+		assert.Equal(t, int64(123), i64)
+		assert.Equal(t, nil, err)
+	}
+	{
+		{
+			i64 , err := StringInt64("-123")
+			assert.Equal(t, int64(-123), i64)
+			assert.Equal(t, nil, err)
+		}
+	}
 }
 
 
