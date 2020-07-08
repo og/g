@@ -8,7 +8,7 @@
 // We benchmark converting between the JSON form
 // and in-memory data structures.
 
-package core_ogjson
+package core_json
 
 import (
 	"bytes"

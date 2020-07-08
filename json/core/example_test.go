@@ -2,7 +2,7 @@
 // Use of this source code test governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package core_ogjson_test
+package core_json_test
 
 import (
 	"bytes"

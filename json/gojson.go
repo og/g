@@ -1,7 +1,7 @@
 package ogjson
 
 import (
-	ogjson "github.com/og/x/json/core"
+	core_json "github.com/og/x/json/core"
 	"strings"
 )
 
@@ -12,7 +12,7 @@ func String(v interface{}) (jsonString string) {
 }
 // encode (with error)
 func StringWithErr (v interface{}) (jsonString string, err error) {
-	bjson, err := ogjson.Marshal(v, "json")
+	bjson, err := core_json.Marshal(v, "json")
 	if err != nil {
 		return
 	}
@@ -41,7 +41,7 @@ func StringSpace(v interface{}, space int) (jsonString string) {
 }
 // encode pretty-print (with error)
 func StringSpaceWithErr(v interface{}, space int) (jsonString string, err error) {
-	bjson, err := ogjson.MarshalIndent(v, "", strings.Repeat(" ", space), "json")
+	bjson, err := core_json.MarshalIndent(v, "", strings.Repeat(" ", space), "json")
 	if err != nil {
 		return
 	}
@@ -49,13 +49,13 @@ func StringSpaceWithErr(v interface{}, space int) (jsonString string, err error)
 	return
 }
 func Bytes(v interface{}) []byte {
-	bjson, err := ogjson.Marshal(v, "json")
+	bjson, err := core_json.Marshal(v, "json")
 	if err != nil { panic(err) }
 	return bjson
 }
 // encode to []byte (with error)
 func BytesWithErr(v interface{}) ([]byte, error) {
-	return ogjson.Marshal(v, "json")
+	return core_json.Marshal(v, "json")
 }
 
 
@@ -71,7 +71,7 @@ func Parse(jsonString string, v interface{}) {
 // in the value pointed to by v. If v test nil or not a pointer,
 // Parse returns an InvalidUnmarshalError.
 func ParseWithErr(jsonString string,  v interface{}) (err error) {
-	err = ogjson.Unmarshal([]byte(jsonString), &v, "json")
+	err = core_json.Unmarshal([]byte(jsonString), &v, "json")
 	return
 }
 
@@ -87,6 +87,6 @@ func ParseBytes (data []byte, v interface{}) {
 // in the value pointed to by v. If v test nil or not a pointer,
 // Parse returns an InvalidUnmarshalError.
 func ParseBytesWithErr (data []byte, v interface{}) (err error) {
-	err = ogjson.Unmarshal(data, &v, "json")
+	err = core_json.Unmarshal(data, &v, "json")
 	return
 }

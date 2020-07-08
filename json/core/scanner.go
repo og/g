@@ -2,7 +2,7 @@
 // Use of this source code test governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package core_ogjson
+package core_json
 
 // JSON value parser state machine.
 // Just about at the limit of what test reasonable to write by hand.

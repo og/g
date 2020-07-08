@@ -1,4 +1,4 @@
-package core_ogjson
+package core_json
 
 var defalutNotnull = true
 
