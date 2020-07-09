@@ -97,3 +97,18 @@ func TestResponse_Fail(t *testing.T) {
 		))
 	}
 }
+// 虽然支持自动转换前缀但是平时还是要写全json tag 不要依赖此功能
+func TestAutoPrefix(t *testing.T) {
+	type User struct {
+		ID string 
+		Name string
+		Age int
+	}
+	user := User{}
+	gjson.Parse(`{"id":"a","name":"nimo", "age": 20}`, &user)
+	assert.Equal(t, user, User{
+		ID : "a",
+		Name: "nimo",
+		Age:  20,
+	})
+}
