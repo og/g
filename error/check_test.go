@@ -6,7 +6,6 @@ import (
 	ge "github.com/og/x/error"
 	"github.com/stretchr/testify/assert"
 	"log"
-	"os"
 	"strconv"
 	"testing"
 )
