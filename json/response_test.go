@@ -100,7 +100,7 @@ func TestResponse_Fail(t *testing.T) {
 // 虽然支持自动转换前缀但是平时还是要写全json tag 不要依赖此功能
 func TestAutoPrefix(t *testing.T) {
 	type User struct {
-		ID string 
+		ID string
 		Name string
 		Age int
 	}
