@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 )
-
+// Spec: https://github.com/og/x/tree/master/error#ErrorStruct
 type ErrorSay struct {
 	ErrorMessage string
 
