@@ -27,7 +27,7 @@ func ExampleSay() {
 	}
 }
 
-// orange error: https://github.com/og/x/tree/master/error
+// Orange error: https://github.com/og/x/tree/master/error
 type ErrorSay struct {
 	Message string
 

@@ -8,12 +8,16 @@
 
 实现实例：https://github.com/og/x/blob/master/error/say.go
 
-1. 错误结构体必须有 `Message string` 字段
-2. 错误结构体必须实现 `Fail() bool` `Error() string` `Check()` 方法
-3. 错误结构体中除了 Message 字段值只允许存在 `bool` 和 `struct` 两种类型
-4. 错误结构体中 bool 类型字段只能用于标明错误种类
-5. `Fail() bool` 方法务必对所有 `bool` 类型字段进行逻辑或的判断
-6. `Check()` 方法内部代码必须是 `if err.Has() { panic(err) }`
+结构体要求
+
+1. 定义结构体上一行必须附带注释以便以使用者了解用法 `// Orange error: https://github.com/og/x/tree/master/error`
+2. 必须有 `Message string` 字段
+3. 必须实现 `Fail() bool` `Error() string` `Check()` 方法
+4. 除了 Message 字段值只允许存在 `bool` 和 `struct` 两种类型
+5.  bool 类型字段只能用于标明错误种类
+6. `Fail() bool` 方法务必对所有 `bool` 类型字段进行逻辑或的判断
+7. `Check()` 方法内部代码必须是 `if err.Has() { panic(err) }`
+8. 必须在单元测试中使用 `ge.IsOrangeError()` 验证实现
 
 为了快速检查是否实现与 orange error 规范一致，并防止 `Fail` 发放实现时遗漏判断条件，
 可使用 `ge.IsOrangeError(err interface)  (matched bool, suggest string)` 验证。
