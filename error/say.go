@@ -8,6 +8,11 @@ import (
 
 func ExampleSay() {
 	{
+		err := Say("nimo")
+		// if err != nil { panic(err) }
+		err.Check()
+	}
+	{
 		err := Say("fuck")
 		if err.Has() {
 			switch {
@@ -19,11 +24,6 @@ func ExampleSay() {
 				panic(err)
 			}
 		}
-	}
-	{
-		err := Say("nimo")
-		// if err != nil { panic(err) }
-		err.Check()
 	}
 }
 
