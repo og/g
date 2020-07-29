@@ -16,10 +16,10 @@ func ExampleSay() {
 		err := Say("fuck")
 		if err.Has() {
 			switch {
-			case err.MessageIsEmpty:
-				log.Print("MessageIsEmpty: ", err.Message)
-			case err.SensitiveWord:
-				log.Print(err.Message, " SensitiveWords: " , err.SensitiveWordError.SensitiveWords)
+			case err.ErrNoMessage:
+				log.Print(err.Message)
+			case err.ErrSensitiveWord:
+				log.Print(" SensitiveWords: " , err.SensitiveWord.SensitiveWords)
 			default:
 				panic(err)
 			}
@@ -31,10 +31,10 @@ func ExampleSay() {
 type ErrorSay struct {
 	Message string
 
-	SensitiveWord bool
-	SensitiveWordError SensitiveWordError
+	ErrNoMessage bool
 
-	MessageIsEmpty bool
+	ErrSensitiveWord bool
+	SensitiveWord SensitiveWordError
 }
 type SensitiveWordError struct{
 	SensitiveWords []string
@@ -43,28 +43,28 @@ type SensitiveWordError struct{
 func (err ErrorSay) Error() string {
 	return err.Message
 }
+// Similar: if err != nil
+func (err ErrorSay) Has() bool {
+	return err.ErrSensitiveWord || err.ErrNoMessage
+}
 // Similar: if err != nil { panic(err) }
 func (err ErrorSay) Check() {
 	if err.Has() {
 		panic(err)
 	}
 }
-// Similar: if err != nil
-func (err ErrorSay) Has() bool {
-	// has 必须有单元测试确保所有的bool类型判断字段被匹配
-	return err.SensitiveWord || err.MessageIsEmpty
-}
+
 func Say(message string) ErrorSay {
 	if len(strings.TrimSpace(message)) == 0 {
-		return ErrorSay{MessageIsEmpty: true, Message:"message is empty"}
+		return ErrorSay{ErrNoMessage: true, Message:"message is empty"}
 	}
 	sensitiveWords := []string{"fuck", "bitch"}
 	for _, sensitiveWord := range sensitiveWords {
 		if strings.Contains(message, sensitiveWord) {
 			return ErrorSay{
-				SensitiveWord: true,
+				ErrNoMessage: true,
 				Message: "Watch Your Mouth",
-				SensitiveWordError: SensitiveWordError{ sensitiveWords, },
+				SensitiveWord: SensitiveWordError{ sensitiveWords, },
 			}
 		}
 	}
