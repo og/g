@@ -1,7 +1,6 @@
 package ogjson
 
 import (
-	gtime "github.com/og/x/time"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
@@ -273,57 +272,57 @@ func TestStringConvIntAndFloat (t *testing.T) {
 		assert.Equal(t, 2.2, query.Page)
 	}
 }
-func TestInterface (t *testing.T) {
-	{
-		data := struct {
-			Date SecondTime
-			Name string
-		}{}
-		Parse(`{"Date":"2020-02-28 20:48:45"}`, &data)
-		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:48:45")
-		assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48:45","Name":""}`)
-	}
-	{
-		data := struct {
-			Date MinuteTime
-		}{}
-		Parse(`{"Date":"2020-02-28 20:48"}`, &data)
-		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:48:00")
-		assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48"}`)
-	}
-	{
-		data := struct {
-			Date HourTime
-		}{}
-		Parse(`{"Date":"2020-02-28 20"}`, &data)
-		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:00:00")
-		assert.Equal(t, String(data), `{"Date":"2020-02-28 20"}`)
-	}
-	{
-		data := struct {
-			Date DayTime
-		}{}
-		Parse(`{"Date":"2020-02-28"}`, &data)
-		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 00:00:00")
-		assert.Equal(t, String(data), `{"Date":"2020-02-28"}`)
-	}
-	{
-		data := struct {
-			Date MonthTime
-		}{}
-		Parse(`{"Date":"2020-02"}`, &data)
-		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-01 00:00:00")
-		assert.Equal(t, String(data), `{"Date":"2020-02"}`)
-	}
-	{
-		data := struct {
-			Date YearTime
-		}{}
-		Parse(`{"Date":"2020"}`, &data)
-		assert.Equal(t, data.Date.Format(gtime.Second), "2020-01-01 00:00:00")
-		assert.Equal(t, String(data), `{"Date":"2020"}`)
-	}
-}
+// func TestInterface (t *testing.T) {
+// 	{
+// 		data := struct {
+// 			Date SecondTime
+// 			Name string
+// 		}{}
+// 		Parse(`{"Date":"2020-02-28 20:48:45"}`, &data)
+// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:48:45")
+// 		assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48:45","Name":""}`)
+// 	}
+// 	{
+// 		data := struct {
+// 			Date MinuteTime
+// 		}{}
+// 		Parse(`{"Date":"2020-02-28 20:48"}`, &data)
+// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:48:00")
+// 		assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48"}`)
+// 	}
+// 	{
+// 		data := struct {
+// 			Date HourTime
+// 		}{}
+// 		Parse(`{"Date":"2020-02-28 20"}`, &data)
+// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:00:00")
+// 		assert.Equal(t, String(data), `{"Date":"2020-02-28 20"}`)
+// 	}
+// 	{
+// 		data := struct {
+// 			Date DayTime
+// 		}{}
+// 		Parse(`{"Date":"2020-02-28"}`, &data)
+// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 00:00:00")
+// 		assert.Equal(t, String(data), `{"Date":"2020-02-28"}`)
+// 	}
+// 	{
+// 		data := struct {
+// 			Date MonthTime
+// 		}{}
+// 		Parse(`{"Date":"2020-02"}`, &data)
+// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-01 00:00:00")
+// 		assert.Equal(t, String(data), `{"Date":"2020-02"}`)
+// 	}
+// 	{
+// 		data := struct {
+// 			Date YearTime
+// 		}{}
+// 		Parse(`{"Date":"2020"}`, &data)
+// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-01-01 00:00:00")
+// 		assert.Equal(t, String(data), `{"Date":"2020"}`)
+// 	}
+// }
 
 func Test_ParseSliceNil(t *testing.T) {
 	{
