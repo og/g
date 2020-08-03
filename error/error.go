@@ -16,6 +16,11 @@ func IsOrangeError(errPtr OrangeError) (matched bool, suggest string) {
 	}
 	rValue := rValuePtr.Elem()
 	rType := rValue.Type()
+	// I: 结构体名称必须以 `Error` 作为前置，例如 `ErrorSay` `ErrorOpen`
+	if !strings.HasPrefix(rType.Name(), "Test") && !strings.HasPrefix(rType.Name(), "Error") {
+		suggest = `Struct name prefix must be "Error"`
+		return
+	}
 	// B: 必须包含 Message 属性
 	{
 		pass := false
@@ -52,6 +57,23 @@ func IsOrangeError(errPtr OrangeError) (matched bool, suggest string) {
 			if !errPtr.Has() {
 				return false , "Has() lose " + itemType.Name + "\nplease write\n----------\n" + OrangeErrorGenerateHasMethod(errPtr) + "\n----------\n"
 			}
+			{
+				noMatch := false
+				func(){
+					defer func() {
+						r := recover()
+						if r == nil {
+							noMatch = true
+							matched = false
+							suggest = `When err.Has() return true` + rType.Name() + `.Check() must panic(err)`
+						}
+					}()
+					errPtr.Check()
+				}()
+				if noMatch {
+					return
+				}
+			}
 			// undo
 			itemValue.SetBool(false)
 		case reflect.Struct:
@@ -60,6 +82,23 @@ func IsOrangeError(errPtr OrangeError) (matched bool, suggest string) {
 		}
 		if errPtr.Has() == true {
 			return false, "Maybe Has() code is wrong, when all bool field is false, Has() should return false \nplease write\n----------\n" + OrangeErrorGenerateHasMethod(errPtr) + "\n----------\n"
+		}
+	}
+	{
+		noMatch := false
+		func(){
+			defer func() {
+				r := recover()
+				if r != nil {
+					noMatch = true
+					matched = false
+					suggest = `When err.Has() return false` + rType.Name() + `.Check() can not panic`
+				}
+			}()
+			errPtr.Check()
+		}()
+		if noMatch {
+			return
 		}
 	}
 	// E: `Has() bool` 方法类似于 `if err != nil`
