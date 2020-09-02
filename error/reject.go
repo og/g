@@ -8,7 +8,7 @@ type Reject struct {
 	Response interface{}
 	ShouldRecord bool
 }
-func NilReject() Reject {
+func NotReject() Reject {
 	return Reject{}
 }
 func (reject Reject) Fail() bool {
