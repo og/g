@@ -9,25 +9,32 @@ import (
 func TestRandBySeed(t *testing.T) {
 	{
 		seed := "ab"
-		result := StringBySeed(seed, 10)
+		result := RunesBySpeed([]rune(seed), 10)
 		assert.Equal(t, 10, len(result))
-		assert.Regexp(t, "a", result)
-		assert.Regexp(t, "b", result)
+		assert.Regexp(t, "a", string(result))
+		assert.Regexp(t, "b", string(result))
 	}
 	{
 		seed := "abcd"
-		result := StringBySeed(seed, 20)
+		result := RunesBySpeed([]rune(seed), 20)
 		assert.Equal(t, 20, len(result))
-		assert.Regexp(t, "a", result)
-		assert.Regexp(t, "b", result)
-		assert.Regexp(t, "c", result)
-		assert.Regexp(t, "d", result)
+		assert.Regexp(t, "a", string(result))
+		assert.Regexp(t, "b", string(result))
+		assert.Regexp(t, "c", string(result))
+		assert.Regexp(t, "d", string(result))
+	}
+	{
+		seed := "a我"
+		result := RunesBySpeed([]rune(seed), 20)
+		assert.Equal(t, 20, len(result))
+		assert.Regexp(t, "a", string(result))
+		assert.Regexp(t, "我", string(result))
 	}
 	{
 		sList := []string{}
 		countHash := map[string]int{}
 		for i:=0; i<100000; i++ {
-			s := StringBySeed("1234567890", 10)
+			s := string(RunesBySpeed([]rune("1234567890"), 10))
 			sList = append(sList, s)
 			count, has := countHash[s]
 			if !has {
@@ -40,9 +47,11 @@ func TestRandBySeed(t *testing.T) {
 			countHash[s] = count+1
 		}
 	}
+
 }
 
 func TestLetterBytes(t  *testing.T) {
-	as := gtest.AS(t)
-	as.Eql(string(letterBytes()), "abcdefghijklmnopqrstuvwxyz")
+	as := gtest.NewAS(t)
+	as.Equal(string(letterBytes()), "abcdefghijklmnopqrstuvwxyz")
+
 }

@@ -4,19 +4,21 @@ import (
 	"crypto/rand"
 	"math/big"
 )
-
-func BytesBySeed(seed []byte, size int) []byte {
-	seedB := []byte(seed)
-	result := []byte("")
+func RunesBySpeed(seed []rune, size int ) []rune {
+	var result  []rune
 	for i:=0; i<size; i++ {
 		randIndex, err :=rand.Int(rand.Reader, big.NewInt(int64(len(seed)))) ; if err !=nil {panic(err)}
-		result = append(result, seedB[randIndex.Int64()])
+		result = append(result, seed[randIndex.Int64()])
 	}
 	return result
 }
-
-func StringBySeed(seedString string, size int) string {
-	return string(BytesBySeed([]byte(seedString), size))
+func BytesBySeed(seed []byte, size int) []byte {
+	result := []byte("")
+	for i:=0; i<size; i++ {
+		randIndex, err :=rand.Int(rand.Reader, big.NewInt(int64(len(seed)))) ; if err !=nil {panic(err)}
+		result = append(result, seed[randIndex.Int64()])
+	}
+	return result
 }
 func StringLetter (size int) string {
 	return string(BytesLetter(size))
