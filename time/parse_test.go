@@ -8,7 +8,7 @@ import (
 func TestParse(t *testing.T) {
 	{
 		// 本机时间要是北京时间
-		v := gtime.ParseChina(gtime.Second, "2020-04-08 00:00:00");
+		v := gtime.ParseChina(gtime.LayoutTime, "2020-04-08 00:00:00");
 		if v.Hour() != 0 {
 			panic("china 1 error hour")
 		}
@@ -18,7 +18,7 @@ func TestParse(t *testing.T) {
 	}
 	{
 		// 本机时间要是北京时间
-		v := gtime.ParseUTC(gtime.Second, "2020-04-08 00:00:00");
+		v := gtime.ParseUTC(gtime.LayoutTime, "2020-04-08 00:00:00");
 		if v.Hour() != 0 {
 			panic("utc 1 error hour")
 		}

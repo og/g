@@ -24,7 +24,3 @@ func  Float64ToFixed(f float64, digit int) float64 {
 	output, err := strconv.ParseFloat(fmt.Sprintf(format, f), 64); if err != nil {panic(err)}
 	return output
 }
-// if b == 0 {return 0} ; return a/b
-func Division(a float64 , b float64) float64 {
-	if b == 0 {return 0} ; return a/b
-}
