@@ -1,7 +1,7 @@
 package ogjson
 
 import (
-	"github.com/stretchr/testify/assert"
+	gtest "github.com/og/x/test"
 	"log"
 	"testing"
 )
@@ -39,18 +39,19 @@ func ExampleParse() {
 
 var userJSON = `{"Name":"nimo","Age":27}`
 func TestString(t *testing.T) {
+	as := gtest.NewAS(t)
 	{
 		json := String(user)
-		assert.Equal(t, userJSON, json)
+		as.Equal(userJSON, json)
 	}
 	{
 		json, err := StringWithErr(user)
-		assert.Equal(t, userJSON, json)
-		assert.Equal(t, nil, err)
+		as.Equal(userJSON, json)
+		as.Equal(nil, err)
 	}
 	{
 		json, err := StringWithErr(log.Print)
-		assert.Equal(t, "", json)
+		as.Equal("", json)
 		if err == nil {
 			panic("ByteWithErr(log.Print) should return error")
 		}
@@ -58,18 +59,19 @@ func TestString(t *testing.T) {
 }
 
 func TestStringSpace(t *testing.T) {
+	as := gtest.NewAS(t)
 	{
 		json := StringSpace(user, 2)
-		assert.Equal(t, "{\n  \"Name\": \"nimo\",\n  \"Age\": 27\n}", json)
+		as.Equal("{\n  \"Name\": \"nimo\",\n  \"Age\": 27\n}", json)
 	}
 	{
 		json, err := StringSpaceWithErr(user, 2)
-		assert.Equal(t, "{\n  \"Name\": \"nimo\",\n  \"Age\": 27\n}", json)
-		assert.Equal(t, nil, err)
+		as.Equal("{\n  \"Name\": \"nimo\",\n  \"Age\": 27\n}", json)
+		as.Equal(nil, err)
 	}
 	{
 		json, err := StringSpaceWithErr(log.Print, 2)
-		assert.Equal(t, "", json)
+		as.Equal("", json)
 		if err == nil {
 			panic("StringIndentWithErr(log.Print) should return error")
 		}
@@ -77,9 +79,10 @@ func TestStringSpace(t *testing.T) {
 }
 
 func TestBytes(t *testing.T) {
+	as := gtest.NewAS(t)
 	{
 		json := Bytes(user)
-		assert.Equal(t, []byte(userJSON), json)
+		as.Equal([]byte(userJSON), json)
 	}
 	{
 		user := User{
@@ -87,12 +90,12 @@ func TestBytes(t *testing.T) {
 			Age: 27,
 		}
 		json, err := BytesWithErr(user)
-		assert.Equal(t, []byte(userJSON), json)
-		assert.Equal(t, nil, err)
+		as.Equal([]byte(userJSON), json)
+		as.Equal(nil, err)
 	}
 	{
 		json, err := BytesWithErr(log.Print)
-		assert.Equal(t, []byte(nil), json)
+		as.Equal([]byte(nil), json)
 		if err == nil {
 			panic("ByteWithErr(log.Print) should return error")
 		}
@@ -101,11 +104,12 @@ func TestBytes(t *testing.T) {
 
 
 func TestParse(t *testing.T) {
+	as := gtest.NewAS(t)
 	{
 		{
 			var user User
 			Parse(userJSON, &user)
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "nimo",
 				Age: 27,
 			}, user)
@@ -113,7 +117,7 @@ func TestParse(t *testing.T) {
 		{
 			var user User
 			Parse(userJSON, user)  // not pointer
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "",
 				Age: 0,
 			}, user)
@@ -123,17 +127,17 @@ func TestParse(t *testing.T) {
 		{
 			var user User
 			err := ParseWithErr(userJSON, &user)
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "nimo",
 				Age: 27,
 			}, user)
-			assert.Equal(t, nil, err)
+			as.Equal(nil, err)
 		}
 
 		{
 			var user User
 			err := ParseWithErr(``, &user)
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "",
 				Age: 0,
 			}, user)
@@ -145,17 +149,17 @@ func TestParse(t *testing.T) {
 		{
 			var user User
 			err := ParseWithErr(userJSON, user) // not pointer
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "",
 				Age: 0,
 			}, user)
-			assert.Equal(t, nil, err)
+			as.Equal(nil, err)
 		}
 
 		{
 			var user User
 			err := ParseWithErr(``, user) // not pointer
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "",
 				Age: 0,
 			}, user)
@@ -168,11 +172,12 @@ func TestParse(t *testing.T) {
 
 
 func TestParseByte(t *testing.T) {
+	as := gtest.NewAS(t)
 	{
 		{
 			var user User
 			ParseBytes([]byte(userJSON), &user)
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "nimo",
 				Age: 27,
 			}, user)
@@ -180,7 +185,7 @@ func TestParseByte(t *testing.T) {
 		{
 			var user User
 			ParseBytes([]byte(userJSON), user)  // not pointer
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "",
 				Age: 0,
 			}, user)
@@ -190,7 +195,7 @@ func TestParseByte(t *testing.T) {
 		{
 			var user User
 			ParseBytes([]byte(userJSON), &user)
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "nimo",
 				Age: 27,
 			}, user)
@@ -199,7 +204,7 @@ func TestParseByte(t *testing.T) {
 		{
 			var user User
 			err := ParseBytesWithErr([]byte(``), &user)
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "",
 				Age: 0,
 			}, user)
@@ -211,17 +216,17 @@ func TestParseByte(t *testing.T) {
 		{
 			var user User
 			err := ParseBytesWithErr([]byte(userJSON), user) // not pointer
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "",
 				Age: 0,
 			}, user)
-			assert.Equal(t, nil, err)
+			as.Equal(nil, err)
 		}
 
 		{
 			var user User
 			err := ParseBytesWithErr([]byte(``), user) // not pointer
-			assert.Equal(t, User{
+			as.Equal(User{
 				Name: "",
 				Age: 0,
 			}, user)
@@ -233,43 +238,47 @@ func TestParseByte(t *testing.T) {
 }
 
 func TestStringUnfold(t *testing.T) {
+	as := gtest.NewAS(t)
 	{
 		var user User
 		userUnfoldJSON := `{
   "Name": "",
   "Age": 0
 }`
-		assert.Equal(t, userUnfoldJSON, StringUnfold(user))
+		as.Equal(userUnfoldJSON, StringUnfold(user))
 	}
 }
 func TestEmptyListMap (t *testing.T) {
-	assert.Equal(t, `{"List":[],"Map":{}}`, String(struct {
+	as := gtest.NewAS(t)
+	as.Equal(`{"List":[],"Map":{}}`, String(struct {
 		List []string
 		Map map[string]interface{}
 	}{}))
 }
 
 func TestStringConvInt (t *testing.T) {
+	as := gtest.NewAS(t)
 	query := struct {
 		Page int `json:"page"`
 	}{}
 	Parse(`{"page": "2"}`,&query)
-	assert.Equal(t, 2, query.Page)
+	as.Equal(2, query.Page)
 }
 func TestStringConvIntAndFloat (t *testing.T) {
+	as := gtest.NewAS(t)
 	{
 		query := struct {
 			Page int `json:"page"`
 		}{}
 		Parse(`{"page": "2"}`,&query)
-		assert.Equal(t, 2, query.Page)
+		as.Equal(2, query.Page)
 	}
 	{
 		query := struct {
 			Page float64 `json:"page"`
 		}{}
 		Parse(`{"page": "2.2"}`,&query)
-		assert.Equal(t, 2.2, query.Page)
+		as.Equal(2.2, query.Page)
 	}
 }
 // func TestInterface (t *testing.T) {
@@ -279,59 +288,60 @@ func TestStringConvIntAndFloat (t *testing.T) {
 // 			Name string
 // 		}{}
 // 		Parse(`{"Date":"2020-02-28 20:48:45"}`, &data)
-// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:48:45")
-// 		assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48:45","Name":""}`)
+// 		as.Equal(data.Date.Format(gtime.Second), "2020-02-28 20:48:45")
+// 		as.Equal(String(data), `{"Date":"2020-02-28 20:48:45","Name":""}`)
 // 	}
 // 	{
 // 		data := struct {
 // 			Date MinuteTime
 // 		}{}
 // 		Parse(`{"Date":"2020-02-28 20:48"}`, &data)
-// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:48:00")
-// 		assert.Equal(t, String(data), `{"Date":"2020-02-28 20:48"}`)
+// 		as.Equal(data.Date.Format(gtime.Second), "2020-02-28 20:48:00")
+// 		as.Equal(String(data), `{"Date":"2020-02-28 20:48"}`)
 // 	}
 // 	{
 // 		data := struct {
 // 			Date HourTime
 // 		}{}
 // 		Parse(`{"Date":"2020-02-28 20"}`, &data)
-// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 20:00:00")
-// 		assert.Equal(t, String(data), `{"Date":"2020-02-28 20"}`)
+// 		as.Equal(data.Date.Format(gtime.Second), "2020-02-28 20:00:00")
+// 		as.Equal(String(data), `{"Date":"2020-02-28 20"}`)
 // 	}
 // 	{
 // 		data := struct {
 // 			Date DayTime
 // 		}{}
 // 		Parse(`{"Date":"2020-02-28"}`, &data)
-// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-28 00:00:00")
-// 		assert.Equal(t, String(data), `{"Date":"2020-02-28"}`)
+// 		as.Equal(data.Date.Format(gtime.Second), "2020-02-28 00:00:00")
+// 		as.Equal(String(data), `{"Date":"2020-02-28"}`)
 // 	}
 // 	{
 // 		data := struct {
 // 			Date MonthTime
 // 		}{}
 // 		Parse(`{"Date":"2020-02"}`, &data)
-// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-02-01 00:00:00")
-// 		assert.Equal(t, String(data), `{"Date":"2020-02"}`)
+// 		as.Equal(data.Date.Format(gtime.Second), "2020-02-01 00:00:00")
+// 		as.Equal(String(data), `{"Date":"2020-02"}`)
 // 	}
 // 	{
 // 		data := struct {
 // 			Date YearTime
 // 		}{}
 // 		Parse(`{"Date":"2020"}`, &data)
-// 		assert.Equal(t, data.Date.Format(gtime.Second), "2020-01-01 00:00:00")
-// 		assert.Equal(t, String(data), `{"Date":"2020"}`)
+// 		as.Equal(data.Date.Format(gtime.Second), "2020-01-01 00:00:00")
+// 		as.Equal(String(data), `{"Date":"2020"}`)
 // 	}
 // }
 
 func Test_ParseSliceNil(t *testing.T) {
+	as := gtest.NewAS(t)
 	{
 		data := struct {
 			List []string
 		}{}
 		Parse(`{"List":[]}`, &data)
 		// binding 等库依赖了这个特性，所以不要改变这个特性 @nimoc
-		assert.Equal(t, data.List, []string{})
+		as.Equal(data.List, []string{})
 	}
 	{
 		data := struct {
@@ -339,6 +349,6 @@ func Test_ParseSliceNil(t *testing.T) {
 		}{}
 		Parse(`{}`, &data)
 		// binding 等库依赖了这个特性，所以不要改变这个特性 @nimoc
-		assert.Equal(t, data.List, []string(nil))
+		as.Equal(data.List, []string(nil))
 	}
 }

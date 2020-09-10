@@ -21,9 +21,13 @@ func TestReject(t *testing.T) {
 		if reject.ShouldRecord {
 			// 记录日志
 		}
-		log.Print(reject.Response)
+		as.Equal(reject.Response, Response{
+			Type: "fail",
+			Msg:  "用户不存在",
+			Data: nil,
+		})
 	} else {
-		log.Print(NewPass(nil))
+		log.Print("pass")
 	}
 }
 

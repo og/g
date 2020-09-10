@@ -12,7 +12,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bytedance/json"
+	json "github.com/og/x/json/core"
 )
 
 func ExampleMarshal() {
@@ -26,7 +26,7 @@ func ExampleMarshal() {
 		Name:   "Reds",
 		Colors: []string{"Crimson", "Red", "Ruby", "Maroon"},
 	}
-	b, err := json.Marshal(group)
+	b, err := json.Marshal(group, "json")
 	if err != nil {
 		fmt.Println("error:", err)
 	}
@@ -45,7 +45,7 @@ func ExampleUnmarshal() {
 		Order string
 	}
 	var animals []Animal
-	err := json.Unmarshal(jsonBlob, &animals)
+	err := json.Unmarshal(jsonBlob, &animals, "json")
 	if err != nil {
 		fmt.Println("error:", err)
 	}
@@ -69,7 +69,7 @@ func ExampleDecoder() {
 	dec := json.NewDecoder(strings.NewReader(jsonStream))
 	for {
 		var m Message
-		if err := dec.Decode(&m); err == io.EOF {
+		if err := dec.Decode(&m, "json"); err == io.EOF {
 			break
 		} else if err != nil {
 			log.Fatal(err)
@@ -91,7 +91,7 @@ func ExampleDecoder_Token() {
 `
 	dec := json.NewDecoder(strings.NewReader(jsonStream))
 	for {
-		t, err := dec.Token()
+		t, err := dec.Token("json")
 		if err == io.EOF {
 			break
 		}
@@ -138,7 +138,7 @@ func ExampleDecoder_Decode_stream() {
 	dec := json.NewDecoder(strings.NewReader(jsonStream))
 
 	// read open bracket
-	t, err := dec.Token()
+	t, err := dec.Token("json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -148,7 +148,7 @@ func ExampleDecoder_Decode_stream() {
 	for dec.More() {
 		var m Message
 		// decode an array value (Message)
-		err := dec.Decode(&m)
+		err := dec.Decode(&m, "json")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -157,7 +157,7 @@ func ExampleDecoder_Decode_stream() {
 	}
 
 	// read closing bracket
-	t, err = dec.Token()
+	t, err = dec.Token("json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -196,7 +196,7 @@ func ExampleRawMessage_unmarshal() {
 	{"Space": "RGB",   "Point": {"R": 98, "G": 218, "B": 255}}
 ]`)
 	var colors []Color
-	err := json.Unmarshal(j, &colors)
+	err := json.Unmarshal(j, &colors, "json")
 	if err != nil {
 		log.Fatalln("error:", err)
 	}
@@ -209,7 +209,7 @@ func ExampleRawMessage_unmarshal() {
 		case "YCbCr":
 			dst = new(YCbCr)
 		}
-		err := json.Unmarshal(c.Point, dst)
+		err := json.Unmarshal(c.Point, dst, "json")
 		if err != nil {
 			log.Fatalln("error:", err)
 		}
@@ -229,7 +229,7 @@ func ExampleRawMessage_marshal() {
 		Body   string           `json:"body"`
 	}{Header: &h, Body: "Hello Gophers!"}
 
-	b, err := json.MarshalIndent(&c, "", "\t")
+	b, err := json.MarshalIndent(&c, "", "\t", "json")
 	if err != nil {
 		fmt.Println("error:", err)
 	}
@@ -254,7 +254,7 @@ func ExampleIndent() {
 		{"Sheep Creek", 51},
 	}
 
-	b, err := json.Marshal(roads)
+	b, err := json.Marshal(roads, "json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -281,7 +281,7 @@ func ExampleMarshalIndent() {
 		"b": 2,
 	}
 
-	json, err := json.MarshalIndent(data, "<prefix>", "<indent>")
+	json, err := json.MarshalIndent(data, "<prefix>", "<indent>", "json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -297,7 +297,7 @@ func ExampleMarshalIndent() {
 func ExampleMarshalNotnull() {
 	json.SetNotnull(true)
 	var a *A
-	b, _ := json.Marshal(a)
+	b, _ := json.Marshal(a, "json")
 	fmt.Println(string(b))
 	// Output:
 	// {"List":[],"Map":{},"Children":[],"B":{"ListB":null,"MapB":null,"A":null,"B":null},"MapPtr":{}}

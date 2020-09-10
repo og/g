@@ -1,13 +1,13 @@
 package gtime_test
 
 import (
-	is "github.com/matryer/is"
+	gtest "github.com/og/x/test"
 	gtime "github.com/og/x/time"
 	"testing"
 )
 
 func TestFirstSecond(t *testing.T) {
-	is := is.New(t)
+	as := gtest.NewAS(t)
 	{
 		testCase := [][]string{
 			{"1992-12-19 11:11:11", "1992-12-19 11:11:00",},
@@ -18,14 +18,14 @@ func TestFirstSecond(t *testing.T) {
 		}
 		for _,v := range testCase {
 			tv := gtime.ParseUTC(gtime.LayoutTime, v[0])
-			is.Equal(gtime.FirstSecond(tv).Format(gtime.LayoutTime), v[1])
-			is.Equal(tv.Nanosecond(), 0)
+			as.Equal(gtime.FirstSecond(tv).Format(gtime.LayoutTime), v[1])
+			as.Equal(tv.Nanosecond(), 0)
 		}
 	}
 }
 
 func TestLastSecond(t *testing.T) {
-	is := is.New(t)
+	as := gtest.NewAS(t)
 	{
 		testCase := [][]string{
 			{"1992-12-19 11:11:11", "1992-12-19 11:11:59",},
@@ -36,14 +36,14 @@ func TestLastSecond(t *testing.T) {
 		}
 		for _,v := range testCase {
 			tv := gtime.ParseUTC(gtime.LayoutTime, v[0])
-			is.Equal(gtime.LastSecond(tv).Format(gtime.LayoutTime), v[1])
-			is.Equal(tv.Nanosecond(), 0)
+			as.Equal(gtime.LastSecond(tv).Format(gtime.LayoutTime), v[1])
+			as.Equal(tv.Nanosecond(), 0)
 		}
 	}
 }
 
 func TestFirstMinute(t *testing.T) {
-	is := is.New(t)
+	as := gtest.NewAS(t)
 	{
 		testCase := [][]string{
 			{"1992-12-19 11:00:11", "1992-12-19 11:00:00",},
@@ -53,13 +53,13 @@ func TestFirstMinute(t *testing.T) {
 			{"1992-12-19 11:59:11", "1992-12-19 11:00:00",},
 		}
 		for _,v := range testCase {
-			is.Equal(gtime.FirstMinute(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
+			as.Equal(gtime.FirstMinute(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
 		}
 	}
 }
 
 func TestLastMinute(t *testing.T) {
-	is := is.New(t)
+	as := gtest.NewAS(t)
 	{
 		testCase := [][]string{
 			{"1992-12-19 11:01:11", "1992-12-19 11:59:59",},
@@ -69,14 +69,14 @@ func TestLastMinute(t *testing.T) {
 			{"1992-12-19 11:59:11", "1992-12-19 11:59:59",},
 		}
 		for _,v := range testCase {
-			is.Equal(gtime.LastMinute(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
+			as.Equal(gtime.LastMinute(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
 		}
 	}
 }
 
 
 func TestFirstHour(t *testing.T) {
-	is := is.New(t)
+	as := gtest.NewAS(t)
 	{
 		testCase := [][]string{
 			{"1992-12-19 00:01:11", "1992-12-19 00:00:00",},
@@ -86,13 +86,13 @@ func TestFirstHour(t *testing.T) {
 			{"1992-12-19 23:59:11", "1992-12-19 00:00:00",},
 		}
 		for _,v := range testCase {
-			is.Equal(gtime.FirstHour(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
+			as.Equal(gtime.FirstHour(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
 		}
 	}
 }
 
 func TestLastHour(t *testing.T) {
-	is := is.New(t)
+	as := gtest.NewAS(t)
 	{
 		testCase := [][]string{
 			{"1992-12-19 00:01:11", "1992-12-19 23:59:59",},
@@ -102,13 +102,13 @@ func TestLastHour(t *testing.T) {
 			{"1992-12-19 23:59:11", "1992-12-19 23:59:59",},
 		}
 		for _,v := range testCase {
-			is.Equal(gtime.LastHour(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
+			as.Equal(gtime.LastHour(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
 		}
 	}
 }
 
 func TestFirstDay(t *testing.T) {
-	is := is.New(t)
+	as := gtest.NewAS(t)
 	{
 		testCase := [][]string{
 			{"1992-12-01 00:01:11", "1992-12-01 00:00:00",},
@@ -118,13 +118,13 @@ func TestFirstDay(t *testing.T) {
 			{"1992-12-31 23:59:11", "1992-12-01 00:00:00",},
 		}
 		for _,v := range testCase {
-			is.Equal(gtime.FirstDay(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
+			as.Equal(gtime.FirstDay(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
 		}
 	}
 }
 
 func TestLastDay(t *testing.T) {
-	is := is.New(t)
+	as := gtest.NewAS(t)
 	{
 		testCase := [][]string{
 			{"1992-01-19 00:01:11", "1992-01-31 23:59:59",},
@@ -149,13 +149,13 @@ func TestLastDay(t *testing.T) {
 			{"1967-02-19 02:02:11", "1967-02-28 23:59:59",},
 		}
 		for _,v := range testCase {
-			is.Equal(gtime.LastDay(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
+			as.Equal(gtime.LastDay(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
 		}
 	}
 }
 
 func TestFirstMonth(t *testing.T) {
-	is := is.New(t)
+	as := gtest.NewAS(t)
 	{
 		testCase := [][]string{
 			{"1992-01-01 00:01:11", "1992-01-01 00:00:00",},
@@ -164,13 +164,13 @@ func TestFirstMonth(t *testing.T) {
 			{"1992-12-30 22:58:11", "1992-01-01 00:00:00",},
 		}
 		for _,v := range testCase {
-			is.Equal(gtime.FirstMonth(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
+			as.Equal(gtime.FirstMonth(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
 		}
 	}
 }
 
 func TestLastMonth(t *testing.T) {
-	is := is.New(t)
+	as := gtest.NewAS(t)
 	{
 		testCase := [][]string{
 			{"1992-01-19 00:01:11", "1992-12-31 23:59:59",},
@@ -186,7 +186,7 @@ func TestLastMonth(t *testing.T) {
 			{"1992-12-19 23:59:11", "1992-12-31 23:59:59",},
 		}
 		for _,v := range testCase {
-			is.Equal(gtime.LastMonth(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
+			as.Equal(gtime.LastMonth(gtime.ParseUTC(gtime.LayoutTime, v[0])).Format(gtime.LayoutTime), v[1])
 		}
 	}
 }

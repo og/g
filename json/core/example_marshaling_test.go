@@ -9,7 +9,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/bytedance/json"
+	json "github.com/og/x/json/core"
 )
 
 type Animal int
@@ -22,7 +22,7 @@ const (
 
 func (a *Animal) UnmarshalJSON(b []byte) error {
 	var s string
-	if err := json.Unmarshal(b, &s); err != nil {
+	if err := json.Unmarshal(b, &s,"json"); err != nil {
 		return err
 	}
 	switch strings.ToLower(s) {
@@ -48,13 +48,13 @@ func (a Animal) MarshalJSON() ([]byte, error) {
 		s = "zebra"
 	}
 
-	return json.Marshal(s)
+	return json.Marshal(s,"json")
 }
 
 func Example_customMarshalJSON() {
 	blob := `["gopher","armadillo","zebra","unknown","gopher","bee","gopher","zebra"]`
 	var zoo []Animal
-	if err := json.Unmarshal([]byte(blob), &zoo); err != nil {
+	if err := json.Unmarshal([]byte(blob), &zoo,"json"); err != nil {
 		log.Fatal(err)
 	}
 
