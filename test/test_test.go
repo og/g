@@ -1,8 +1,8 @@
 package gtest_test
 
 import (
+	json "encoding/json"
 	"errors"
-	json "github.com/og/x/json/lib"
 	gtest "github.com/og/x/test"
 	"log"
 	"testing"
@@ -34,8 +34,7 @@ func TestAS(t *testing.T) {
 	{
 		as.Equal(errors.New("abc"), as.Panic(MockPanic))
 		as.Equal("abc", as.Panic(MockPanicString))
-		as.PanicError(errors.New("abc"), MockPanic)
-		as.PanicErrorString("abc", MockPanic)
+		as.PanicError(errors.New("abc").Error(), MockPanic)
 	}
 }
 
