@@ -4,11 +4,11 @@ import (
 	"crypto/rand"
 	"math/big"
 )
-func RunesBySpeed(seed []rune, size int ) []rune {
+func RunesBySpeed(seed string, size int ) []rune {
 	var result  []rune
 	for i:=0; i<size; i++ {
-		randIndex, err :=rand.Int(rand.Reader, big.NewInt(int64(len(seed)))) ; if err !=nil {panic(err)}
-		result = append(result, seed[randIndex.Int64()])
+		randIndex, err :=rand.Int(rand.Reader, big.NewInt(int64(len([]rune(seed))))) ; if err !=nil {panic(err)}
+		result = append(result, []rune(seed)[randIndex.Int64()])
 	}
 	return result
 }
