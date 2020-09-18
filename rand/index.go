@@ -12,6 +12,11 @@ func RunesBySpeed(seed string, size int ) []rune {
 	}
 	return result
 }
+func IntRange(min int, max int) int {
+	if max == min {return max}
+	value, err :=rand.Int(rand.Reader, big.NewInt(int64(max-min+1))) ; if err !=nil {panic(err)}
+	return int(value.Int64())+min
+}
 func BytesBySeed(seed []byte, size int) []byte {
 	result := []byte("")
 	for i:=0; i<size; i++ {

@@ -55,3 +55,17 @@ func TestLetterBytes(t  *testing.T) {
 	as.Equal(string(letterBytes()), "abcdefghijklmnopqrstuvwxyz")
 
 }
+func TestIntRange(t *testing.T) {
+	as := gtest.NewAS(t)
+	temp := [4]bool{false, false, false, false}
+	for i:=0;i<10000;i++ {
+		as.Range(IntRange(0,1), 0 ,1)
+		as.Equal(IntRange(1,1), 1)
+		as.Range(IntRange(0,2), 0 ,2)
+		as.Range(IntRange(0,3), 0 ,3)
+		as.Range(IntRange(0,4), 0 ,4)
+		as.Range(IntRange(10,12), 10,12)
+		temp[IntRange(1,3)] = true
+	}
+	as.Equal(temp, [4]bool{false, true, true, true})
+}
