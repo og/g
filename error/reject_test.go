@@ -7,25 +7,49 @@ import (
 	"testing"
 )
 
-func Some() ge.Reject {
+func Some() error {
 	return ge.Reject{
 		Response: NewFail("用户不存在"),
 	}
-	// return ge.NilReject()
+	// return nil
+}
+func TestReject_Error(t *testing.T) {
+	as := gtest.NewAS(t)
+	as.Equal(ge.Reject{Response: map[string]string{"type":"pass"}, ShouldRecord: true}.Error(), `{"type":"pass"}`)
+
+	testInterface := func(err error) {/* 编译期不报错即可 */}
+	testInterface(ge.Reject{})
+}
+func TestErrorToReject(t *testing.T) {
+	as := gtest.NewAS(t)
+	{
+		var err error
+		err = nil
+		reject, isReject := ge.ErrorToReject(err)
+		as.Equal(reject, ge.Reject{})
+		as.Equal(isReject, false)
+	}
+	{
+		err := func () error {
+			return ge.Reject{"abc", true}
+		}()
+		reject, isReject := ge.ErrorToReject(err)
+		as.Equal(reject, ge.Reject{})
+		as.Equal(isReject, false)
+	}
+
 }
 func TestReject(t *testing.T) {
 	as := gtest.NewAS(t)
 	_ =as
-	reject := Some()
-	if reject.Fail() {
-		if reject.ShouldRecord {
-			// 记录日志
+	err := Some()
+	if err != nil {
+		reject, isReject := ge.ErrorToReject(err)
+		if isReject {
+			log.Print(reject.Response)
+		} else {
+			log.Print(err)
 		}
-		as.Equal(reject.Response, Response{
-			Type: "fail",
-			Msg:  "用户不存在",
-			Data: nil,
-		})
 	} else {
 		log.Print("pass")
 	}
