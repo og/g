@@ -4,18 +4,24 @@ import (
 	ogjson "github.com/og/x/json"
 )
 
-type Reject struct {
+type reject struct {
 	Response interface{}
 	ShouldRecord bool
 }
-func (reject Reject) Error() string {
+func (reject reject) Error() string {
 	return ogjson.String(reject.Response)
 }
-func ErrorToReject(err error) (reject Reject, isReject bool) {
+func ErrorToReject(err error) (rejectValue reject, isReject bool) {
 	switch err.(type) {
-	case Reject:
-		return err.(Reject), true
+	case reject:
+		return err.(reject), true
 	default:
-		return Reject{}, false
+		return reject{}, false
+	}
+}
+func NewReject(response interface{}, shouldRecord bool) reject {
+	return reject{
+		Response: response,
+		ShouldRecord: shouldRecord,
 	}
 }

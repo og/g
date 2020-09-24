@@ -7,18 +7,12 @@ import (
 	"testing"
 )
 
-func Some() error {
-	return ge.Reject{
-		Response: NewFail("用户不存在"),
-	}
-	// return nil
-}
 func TestReject_Error(t *testing.T) {
 	as := gtest.NewAS(t)
-	as.Equal(ge.Reject{Response: map[string]string{"type":"pass"}, ShouldRecord: true}.Error(), `{"type":"pass"}`)
+	as.Equal(ge.NewReject(map[string]string{"type":"pass"}, true).Error(), `{"type":"pass"}`)
 
 	testInterface := func(err error) {/* 编译期不报错即可 */}
-	testInterface(ge.Reject{})
+	testInterface(ge.NewReject(nil, false))
 }
 func TestErrorToReject(t *testing.T) {
 	as := gtest.NewAS(t)
@@ -26,18 +20,30 @@ func TestErrorToReject(t *testing.T) {
 		var err error
 		err = nil
 		reject, isReject := ge.ErrorToReject(err)
-		as.Equal(reject, ge.Reject{})
+		as.Equal(reject, ge.NewReject(nil, false))
 		as.Equal(isReject, false)
 	}
 	{
 		err := func () error {
-			return ge.Reject{"abc", true}
+			return ge.NewReject("abc", false)
 		}()
 		reject, isReject := ge.ErrorToReject(err)
-		as.Equal(reject, ge.Reject{})
-		as.Equal(isReject, false)
+		as.Equal(reject, ge.NewReject("abc", false))
+		as.Equal(isReject, true)
+	}
+	{
+		err := func () error {
+			return ge.NewReject("abc", true)
+		}()
+		reject, isReject := ge.ErrorToReject(err)
+		as.Equal(reject, ge.NewReject("abc", true))
+		as.Equal(isReject, true)
 	}
 
+}
+func Some() error {
+	return ge.NewReject(NewFail("用户不存在"), false)
+	// return nil
 }
 func TestReject(t *testing.T) {
 	as := gtest.NewAS(t)
