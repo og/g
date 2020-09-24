@@ -4,10 +4,8 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/dchest/safefile v0.0.0-20151022103144-855e8d98f185/go.mod h1:cFRxtTwTOJkz2x3rQUNCYKWC93yP1VKjR8NUhqFxZNU=
 github.com/google/go-querystring v1.0.0/go.mod h1:odCYkC5MyYFN7vkCjXpyrEuKhc/BUO6wN/zVPAxq5ck=
 github.com/kardianos/govendor v1.0.9/go.mod h1:yvmR6q9ZZ7nSF5Wvh40v0wfP+3TwwL8zYQp+itoZSVM=
-github.com/og/x v0.0.0-20200102034047-45ae3cda9792/go.mod h1:9CPknqm4VhKaQKRcllH3pCVAz4Wj0yfuRBKEXw37rxw=
-github.com/og/x/json v0.0.0-20190911074324-46c1b3e856fb/go.mod h1:bZrrjE/DSoVtxVFWtDHU1BD82zwiheYZSSjCFWHEm70=
-github.com/og/x/json v0.0.0-20200904085118-4a57642028fd h1:H1Qto5zrmxMYyDb00ln5cicKMnA2FHKX13i7CWw3LWs=
-github.com/og/x/json v0.0.0-20200904085118-4a57642028fd/go.mod h1:gcYUIgxOtIITHViuIilfUch7h7Stzt2+4J1neXDhDto=
+github.com/og/json v0.0.0-20200911082324-b2ef83a1c151 h1:bVS2uhr26b7+RMMFfhnZOedyzZ5RChWJyKNaGilihxY=
+github.com/og/json v0.0.0-20200911082324-b2ef83a1c151/go.mod h1:AiKvpoV0+CvBNgclCC8XS/9uwy/ZC01qITbGxduIlrU=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
