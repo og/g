@@ -11,16 +11,16 @@ type reject struct {
 func (reject reject) Error() string {
 	return ogjson.String(reject.Response)
 }
-func ErrorToReject(err error) (rejectValue reject, isReject bool) {
+func ErrorToReject(err error) (rejectValue *reject, isReject bool) {
 	switch err.(type) {
-	case reject:
-		return err.(reject), true
+	case *reject:
+		return err.(*reject), true
 	default:
-		return reject{}, false
+		return &reject{}, false
 	}
 }
-func NewReject(response interface{}, shouldRecord bool) reject {
-	return reject{
+func NewReject(response interface{}, shouldRecord bool) error {
+	return &reject{
 		Response: response,
 		ShouldRecord: shouldRecord,
 	}
