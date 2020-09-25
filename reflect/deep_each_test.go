@@ -297,6 +297,8 @@ func BindRequest() error {
 		File *os.File
 	}
 	query := req.URL.Query()
+	queryLen := len(query)
+	lenCount := 0
 	createUser := CreateUser{}
 	var eachErr error
 	DeepEach(&createUser, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator {
@@ -311,6 +313,10 @@ func BindRequest() error {
 		err := gconv.StringReflect(value, rValue.Addr())
 		if err !=nil {
 			eachErr = err
+			return EachBreak
+		}
+		lenCount++
+		if lenCount == queryLen {
 			return EachBreak
 		}
 		return EachContinue
