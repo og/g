@@ -9,7 +9,29 @@ type DeepEachInfo struct {
 	IsRoot bool
 }
 // 前序遍历，遇到指针跳过指针回调值
-func DeepEach(v interface{}, callback func(rValue reflect.Value, rType reflect.Type, field reflect.StructField)) {
+type EachCallback func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator
+type EachOperator string
+func (v EachOperator) String() string {
+	return string(v)
+}
+func (v EachOperator) Switch(
+	EachContinueHandle func(_EachContinue int),
+	EachBreakHandle func(_EachBreak bool),
+	) {
+	switch v {
+	default:
+		panic(errors.New("EachOperator can not be (" + v.String() + ")"))
+	case EachContinue:
+		EachContinueHandle(0)
+	case EachBreak:
+		EachBreakHandle(false)
+	}
+}
+const (
+	EachContinue EachOperator = "continue"
+	EachBreak EachOperator = "break"
+)
+func DeepEach(v interface{}, callback EachCallback) {
 	if callback == nil {
 		panic(errors.New("greject.DeepEach(&v, callback) callback can not be nil"))
 	}
@@ -34,15 +56,24 @@ type coreEachProps struct {
 	parentValue reflect.Value
 	parentType reflect.Type
 	field reflect.StructField
-	callback func(rValue reflect.Value, rType reflect.Type, field reflect.StructField)
+	callback EachCallback
 	info DeepEachInfo
 }
-func coreEach(props coreEachProps) {
+func coreEach(props coreEachProps) EachOperator {
 	switch {
 	case props.info.IsRoot:
 	case props.parentType.Kind() == reflect.Ptr:
 	default:
-		props.callback(props.parentValue, props.parentType, props.field)
+		operator := props.callback(props.parentValue, props.parentType, props.field)
+		shouldBreak := false
+		operator.Switch(func(_EachContinue int) {
+			shouldBreak = false
+		}, func(_EachBreak bool) {
+			shouldBreak = true
+		})
+		if shouldBreak {
+			return EachBreak
+		}
 	}
 	if props.info.IsRoot {
 		props.info.IsRoot = false
@@ -52,50 +83,63 @@ func coreEach(props coreEachProps) {
 		if !props.parentValue.IsNil() {
 			elementValue := props.parentValue.Elem()
 			elementType := props.parentType.Elem()
-			coreEach(coreEachProps{
+			op := coreEach(coreEachProps{
 				parentValue: elementValue,
 				parentType:  elementType,
 				field:       props.field,
 				callback:    props.callback,
 				info:        props.info,
 			})
+			if op == EachBreak {
+				return EachBreak
+			}
 		}
 	case reflect.Map:
 		for _, key := range props.parentValue.MapKeys() {
-			coreEach(coreEachProps{
+			op := coreEach(coreEachProps{
 				parentValue: props.parentValue.MapIndex(key),
 				parentType:  key.Type(),
 				field:       reflect.StructField{},
 				callback:    props.callback,
 				info:        props.info,
 			})
+			if op == EachBreak {
+				return EachBreak
+			}
 		}
 	case reflect.Struct:
 		for i:=0;i< props.parentType.NumField();i++ {
 			rValue := props.parentValue.Field(i)
 			rType := rValue.Type()
 			field := props.parentType.Field(i)
-			coreEach(coreEachProps{
+			op := coreEach(coreEachProps{
 				parentValue: rValue,
 				parentType: rType,
 				field: field,
 				callback: props.callback,
 				info: props.info,
 			})
+			if op == EachBreak {
+				return EachBreak
+			}
 		}
 	case reflect.Slice:
 		for i:=0;i<props.parentValue.Len();i++ {
 			elementValue := props.parentValue.Index(i)
 			elementType := elementValue.Type()
-			coreEach(coreEachProps{
+			op := coreEach(coreEachProps{
 				parentValue: elementValue,
 				parentType: elementType,
 				field: reflect.StructField{},
 				callback: props.callback,
 				info: props.info,
 			})
+			if op == EachBreak {
+				return EachBreak
+			}
 		}
 	default:
 
 	}
+	return EachContinue
 }

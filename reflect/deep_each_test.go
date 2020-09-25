@@ -2,14 +2,17 @@ package greflect
 
 import (
 	ogjson "github.com/og/json"
+	gconv "github.com/og/x/conv"
 	gtest "github.com/og/x/test"
 	"log"
+	"net/http/httptest"
+	"os"
 	"reflect"
 	"testing"
 )
 func TestDeepEachPnaicAndError(t *testing.T) {
 	as := gtest.NewAS(t)
-	as. PanicError("greject.DeepEach(v, callback) callback can not be nil", func() {
+	as. PanicError("greject.DeepEach(&v, callback) callback can not be nil", func() {
 		DeepEach(struct {}{}, nil)
 	})
 }
@@ -233,8 +236,7 @@ func TestDeepEach(t *testing.T) {
 			JSONString: `"b"`,
 		},
 	}
-	DeepEach(&demo, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) {
-
+	DeepEach(&demo, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator {
 		infos = append(infos, Info{
 			FieldName: field.Name,
 			TypeName: rType.Name(),
@@ -249,9 +251,73 @@ func TestDeepEach(t *testing.T) {
 			}(),
 			JSONTag: field.Tag.Get("json"),
 		})
+		return EachContinue
 	})
 	as.Equal(infos, actualInfos)
 	if t.Failed() {
 		log.Print(ogjson.StringUnfold(infos))
 	}
+}
+
+func TestEachOperator(t *testing.T) {
+	as := gtest.NewAS(t)
+	_=as
+	list := []string{"a","b","c"}
+	msg := ""
+	DeepEach(&list, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator {
+		msg += rValue.String()
+		if rValue.String() == "b" {
+			return EachBreak
+		}
+		return EachContinue
+	})
+	as.Equal(msg, "ab")
+}
+
+func TestBindRequest(t *testing.T) {
+	as := gtest.NewAS(t)
+	_=as
+	BindRequest()
+
+}
+func BindRequest() error {
+	req := httptest.NewRequest("GET", "http://www.domain.com/?name=nimoc&age=27&h=true&schoolName=a&gender=female", nil)
+	type School struct {
+		Name string `query:"schoolName"`
+	}
+	type Gender struct {
+		Gender string `query:"gender"`
+	}
+	type CreateUser struct {
+		// Name string `query:"name"`
+		// Age uint8 `query:"age"`
+		// Happy bool `query:"h"`
+		// School School
+		// Gender
+		File *os.File
+	}
+	query := req.URL.Query()
+	createUser := CreateUser{}
+	var eachErr error
+	DeepEach(&createUser, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator {
+		queryTag := field.Tag.Get("query")
+		if queryTag == "" {
+			return EachContinue
+		}
+		value := query.Get(queryTag)
+		if value == "" {
+			return EachContinue
+		}
+		err := gconv.StringReflect(value, rValue.Addr())
+		if err !=nil {
+			eachErr = err
+			return EachBreak
+		}
+		return EachContinue
+	})
+	log.Printf("%+v", createUser)
+	if eachErr != nil {
+		panic(eachErr)
+	}
+	return eachErr
 }
