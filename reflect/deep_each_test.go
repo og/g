@@ -3,6 +3,7 @@ package greflect
 import (
 	ogjson "github.com/og/json"
 	gtest "github.com/og/x/test"
+	"log"
 	"reflect"
 	"testing"
 )
@@ -21,7 +22,7 @@ func TestDeepEach(t *testing.T) {
 		TypeName string
 		TypeKind reflect.Kind
 		AnonymousField bool
-		JSONString interface{}
+		JSONString string
 		JSONTag string
 	}
 	var infos []Info
@@ -40,9 +41,15 @@ func TestDeepEach(t *testing.T) {
 		AnonymousCombination
 		News News
 		Hobby []string
+		Array [1]string
 		Numbers IntList
 		NewsList []News
 		StringPtr *string
+		Map map[string]string
+		NewsPtr1 *News
+		NewsPtr2 *News
+		NewsListPtr *[]News
+		NewsList2Ptr []*News
 	}
 	testStr := "orange"
 	demo := Demo{
@@ -53,9 +60,17 @@ func TestDeepEach(t *testing.T) {
 		},
 		News: News{Content:"c"},
 		Hobby: []string{"read"},
+		Array: [1]string{"a"},
 		Numbers: IntList{1},
 		NewsList: []News{News{}},
 		StringPtr: &testStr,
+		Map: map[string]string{
+			"type": "pass",
+		},
+		NewsPtr1: nil,
+		NewsPtr2: &News{Content:""},
+		NewsListPtr: &[]News{{Content:"a"}},
+		NewsList2Ptr: []*News{{Content:"b"}},
 	}
 	actualInfos := []Info{
 		{
@@ -116,6 +131,12 @@ func TestDeepEach(t *testing.T) {
 			JSONString: `"read"`,
 		},
 		{
+			FieldName: "Array",
+			TypeName: "",
+			TypeKind: reflect.Array,
+			JSONString: `["a"]`,
+		},
+		{
 			FieldName: "Numbers",
 			TypeName: "IntList",
 			TypeKind: reflect.Slice,
@@ -147,21 +168,90 @@ func TestDeepEach(t *testing.T) {
 		},
 		{
 			FieldName: "StringPtr",
-			TypeName: "",
-			TypeKind: reflect.Ptr,
+			TypeName: "string",
+			TypeKind: reflect.String,
 			JSONString: `"orange"`,
+		},
+		{
+			FieldName: "Map",
+			TypeName: "",
+			TypeKind: reflect.Map,
+			JSONString: `{"type":"pass"}`,
+		},
+		{
+			FieldName: "",
+			TypeName: "string",
+			TypeKind: reflect.String,
+			JSONString: `"pass"`,
+		},
+		{
+			FieldName: "NewsPtr2",
+			TypeName: "News",
+			TypeKind: reflect.Struct,
+			JSONString: `{"Content":""}`,
+		},
+		{
+			FieldName: "Content",
+			TypeName: "string",
+			TypeKind: reflect.String,
+			JSONString: `""`,
+		},
+		{
+			FieldName: "NewsListPtr",
+			TypeName: "",
+			TypeKind: reflect.Slice,
+			JSONString: `[{"Content":"a"}]`,
+		},
+		{
+			FieldName: "",
+			TypeName: "News",
+			TypeKind: reflect.Struct,
+			JSONString: `{"Content":"a"}`,
+		},
+		{
+			FieldName: "Content",
+			TypeName: "string",
+			TypeKind: reflect.String,
+			JSONString: `"a"`,
+		},
+		{
+			FieldName: "NewsList2Ptr",
+			TypeName: "",
+			TypeKind: reflect.Slice,
+			JSONString: `[{"Content":"b"}]`,
+		},
+		{
+			FieldName: "",
+			TypeName: "News",
+			TypeKind: reflect.Struct,
+			JSONString: `{"Content":"b"}`,
+		},
+		{
+			FieldName: "Content",
+			TypeName: "string",
+			TypeKind: reflect.String,
+			JSONString: `"b"`,
 		},
 	}
 	DeepEach(&demo, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) {
+
 		infos = append(infos, Info{
 			FieldName: field.Name,
 			TypeName: rType.Name(),
 			TypeKind: rType.Kind(),
 			AnonymousField: field.Anonymous,
-			JSONString: ogjson.String(rValue.Interface()),
+			JSONString: func() string {
+				if rValue.CanInterface() {
+					return ogjson.String(rValue.Interface())
+				} else {
+					return "nil"
+				}
+			}(),
 			JSONTag: field.Tag.Get("json"),
 		})
 	})
-	// log.Print(ogjson.StringUnfold(infos))
 	as.Equal(infos, actualInfos)
+	if t.Failed() {
+		log.Print(ogjson.StringUnfold(infos))
+	}
 }

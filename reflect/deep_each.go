@@ -8,6 +8,7 @@ import (
 type DeepEachInfo struct {
 	IsRoot bool
 }
+// 前序遍历，遇到指针跳过指针回调值
 func DeepEach(v interface{}, callback func(rValue reflect.Value, rType reflect.Type, field reflect.StructField)) {
 	if callback == nil {
 		panic(errors.New("greject.DeepEach(&v, callback) callback can not be nil"))
@@ -37,13 +38,38 @@ type coreEachProps struct {
 	info DeepEachInfo
 }
 func coreEach(props coreEachProps) {
-	if !props.info.IsRoot {
+	switch {
+	case props.info.IsRoot:
+	case props.parentType.Kind() == reflect.Ptr:
+	default:
 		props.callback(props.parentValue, props.parentType, props.field)
 	}
 	if props.info.IsRoot {
 		props.info.IsRoot = false
 	}
 	switch props.parentType.Kind() {
+	case reflect.Ptr:
+		if !props.parentValue.IsNil() {
+			elementValue := props.parentValue.Elem()
+			elementType := props.parentType.Elem()
+			coreEach(coreEachProps{
+				parentValue: elementValue,
+				parentType:  elementType,
+				field:       props.field,
+				callback:    props.callback,
+				info:        props.info,
+			})
+		}
+	case reflect.Map:
+		for _, key := range props.parentValue.MapKeys() {
+			coreEach(coreEachProps{
+				parentValue: props.parentValue.MapIndex(key),
+				parentType:  key.Type(),
+				field:       reflect.StructField{},
+				callback:    props.callback,
+				info:        props.info,
+			})
+		}
 	case reflect.Struct:
 		for i:=0;i< props.parentType.NumField();i++ {
 			rValue := props.parentValue.Field(i)
