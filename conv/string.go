@@ -47,9 +47,6 @@ func StringReflect(s string, rValue reflect.Value)  error {
 			return errors.New("StringReflect(s, rValue) rValue must can set, mu be you should use reflect.ValueOf(pointer)")
 		}
 	}
-	if rType.Kind() != reflect.Ptr {
-
-	}
 	return coreStringReflect(s, rValue, rType)
 }
 func coreStringReflect (s string, rValue reflect.Value, rType reflect.Type) error {

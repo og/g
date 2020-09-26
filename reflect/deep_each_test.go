@@ -1,19 +1,18 @@
 package greflect
 
 import (
+	"errors"
 	ogjson "github.com/og/json"
-	gconv "github.com/og/x/conv"
 	gtest "github.com/og/x/test"
 	"log"
-	"net/http/httptest"
-	"os"
 	"reflect"
 	"testing"
 )
 func TestDeepEachPnaicAndError(t *testing.T) {
 	as := gtest.NewAS(t)
 	as. PanicError("greject.DeepEach(&v, callback) callback can not be nil", func() {
-		DeepEach(struct {}{}, nil)
+		err := DeepEach(struct {}{}, nil)
+		as.NoError(err)
 	})
 }
 
@@ -27,6 +26,7 @@ func TestDeepEach(t *testing.T) {
 		AnonymousField bool
 		JSONString string
 		JSONTag string
+		CanNotSet bool
 	}
 	var infos []Info
 	type ID string
@@ -186,6 +186,7 @@ func TestDeepEach(t *testing.T) {
 			TypeName: "string",
 			TypeKind: reflect.String,
 			JSONString: `"pass"`,
+			CanNotSet: true,
 		},
 		{
 			FieldName: "NewsPtr2",
@@ -236,7 +237,7 @@ func TestDeepEach(t *testing.T) {
 			JSONString: `"b"`,
 		},
 	}
-	DeepEach(&demo, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator {
+	err := DeepEach(&demo, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) (op EachOperator) {
 		infos = append(infos, Info{
 			FieldName: field.Name,
 			TypeName: rType.Name(),
@@ -250,9 +251,11 @@ func TestDeepEach(t *testing.T) {
 				}
 			}(),
 			JSONTag: field.Tag.Get("json"),
+			CanNotSet: !rValue.CanSet(),
 		})
-		return Continue
+		return
 	})
+	as.NoError(err)
 	as.Equal(infos, actualInfos)
 	if t.Failed() {
 		log.Print(ogjson.StringUnfold(infos))
@@ -264,66 +267,45 @@ func TestEachOperator(t *testing.T) {
 	_=as
 	list := []string{"a","b","c"}
 	msg := ""
-	DeepEach(&list, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator {
+	err := DeepEach(&list, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) (op EachOperator) {
 		msg += rValue.String()
 		if rValue.String() == "b" {
-			return Break
+			return op.Break()
 		}
-		return Continue
+		return
 	})
+	as.NoError(err)
 	as.Equal(msg, "ab")
 }
 
-func TestBindRequest(t *testing.T) {
+// func TestDeepEachMap(t *testing.T) {
+// 	as := gtest.NewAS(t)
+// 	type Item struct {
+// 		Value string
+// 	}
+// 	type Data map[string]Item
+//
+// 	data := Data{
+// 		"name": Item{"nimoc"},
+// 		"title": Item{"abc"},
+// 	}
+// 	err := DeepEach(data, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) (op EachOperator) {
+// 		if rType.Kind() == reflect.String {
+// 			rValue.SetString(rValue.String() + "!")
+// 		}
+// 		return
+// 	})
+// 	as.NoError(err)
+// 	log.Print(data)
+// }
+func TestDeepEachError(t *testing.T) {
 	as := gtest.NewAS(t)
-	_=as
-	BindRequest()
-
-}
-func BindRequest() error {
-	req := httptest.NewRequest("GET", "http://www.domain.com/?name=nimoc&age=27&h=true&schoolName=a&gender=female", nil)
-	type School struct {
-		Name string `query:"schoolName"`
-	}
-	type Gender struct {
-		Gender string `query:"gender"`
-	}
-	type CreateUser struct {
-		// Name string `query:"name"`
-		// Age uint8 `query:"age"`
-		// Happy bool `query:"h"`
-		// School School
-		// Gender
-		File *os.File
-	}
-	query := req.URL.Query()
-	queryLen := len(query)
-	lenCount := 0
-	createUser := CreateUser{}
-	var eachErr error
-	DeepEach(&createUser, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator {
-		queryTag := field.Tag.Get("query")
-		if queryTag == "" {
-			return Continue
+	err := DeepEach(map[string]int{"a":1,"b":2}, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) (op EachOperator) {
+		if rValue.Int() == 2 {
+			return op.Error(errors.New("value can not be 2"))
 		}
-		value := query.Get(queryTag)
-		if value == "" {
-			return Continue
-		}
-		err := gconv.StringReflect(value, rValue.Addr())
-		if err !=nil {
-			eachErr = err
-			return Break
-		}
-		lenCount++
-		if lenCount == queryLen {
-			return Break
-		}
-		return Continue
+		return
 	})
-	log.Printf("%+v", createUser)
-	if eachErr != nil {
-		panic(eachErr)
-	}
-	return eachErr
+	as.ErrorString(err, "value can not be 2")
 }
+

@@ -2,6 +2,7 @@ package greflect
 
 import (
 	"errors"
+	"log"
 	"reflect"
 )
 
@@ -9,48 +10,63 @@ type DeepEachInfo struct {
 	IsRoot bool
 }
 // 前序遍历，遇到指针跳过指针回调值
-type EachCallback func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator
-type EachOperator string
-func (v EachOperator) String() string {
-	return string(v)
+type EachCallback func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) (op EachOperator)
+type EachOperator struct {
+	shouldBreak bool
+	error error
 }
-func (v EachOperator) Switch(
-	ContinueHandle func(_Continue int),
-	BreakHandle func(_Break bool),
-	) {
-	switch v {
-	default:
-		panic(errors.New("EachOperator can not be (" + v.String() + ")"))
-	case Continue:
-		ContinueHandle(0)
-	case Break:
-		BreakHandle(false)
+func (op EachOperator) Error(err error) EachOperator {
+	if err == nil {
+		log.Print("greflect: warning BreakAndReturnError(err) err is nil, maybe you write wrong code.")
+	}
+	return EachOperator{
+		error: err,
+		shouldBreak: true,
 	}
 }
-const (
-	Continue EachOperator = "continue"
-	Break EachOperator = "break"
-)
-func DeepEach(v interface{}, callback EachCallback) {
+func (op EachOperator) Break() EachOperator {
+	return EachOperator{
+		shouldBreak: true,
+	}
+}
+func (op EachOperator) shouldReturn() bool {
+	if op.error != nil {
+		return true
+	}
+	if op.shouldBreak {
+		return true
+	}
+	return false
+}
+
+func DeepEach(v interface{}, callback EachCallback) error {
 	if callback == nil {
 		panic(errors.New("greject.DeepEach(&v, callback) callback can not be nil"))
 	}
-	rootValuePtr := reflect.ValueOf(v)
-	if rootValuePtr.Type().Kind() != reflect.Ptr {
-		panic(errors.New("greject.DeepEach(&v, callback) v must be pointer"))
-	}
-	rootValue := rootValuePtr.Elem()
+
+	rootValue := reflect.ValueOf(v)
 	rootType := rootValue.Type()
+
+	if !rootValue.CanSet() && rootType.Kind() != reflect.Map {
+		if rootValue.Kind() == reflect.Ptr {
+			rootValue = rootValue.Elem()
+			rootType = rootType.Elem()
+		}
+		if !rootValue.CanSet() {
+			return errors.New("DeepEach(v, callback) v must can set, mu be you should use DeepEach(&v, callback)")
+		}
+	}
 	info := DeepEachInfo{
 		IsRoot: true,
 	}
-	coreEach(coreEachProps{
+	op := coreEach(coreEachProps{
 		parentValue: rootValue,
 		parentType: rootType,
 		field: reflect.StructField{},
 		callback: callback,
 		info: info,
 	})
+	return op.error
 }
 type coreEachProps struct {
 	parentValue reflect.Value
@@ -64,16 +80,8 @@ func coreEach(props coreEachProps) EachOperator {
 	case props.info.IsRoot:
 	case props.parentType.Kind() == reflect.Ptr:
 	default:
-		operator := props.callback(props.parentValue, props.parentType, props.field)
-		shouldBreak := false
-		operator.Switch(func(_Continue int) {
-			shouldBreak = false
-		}, func(_Break bool) {
-			shouldBreak = true
-		})
-		if shouldBreak {
-			return Break
-		}
+		op := props.callback(props.parentValue, props.parentType, props.field)
+		if op.shouldReturn() { return op }
 	}
 	if props.info.IsRoot {
 		props.info.IsRoot = false
@@ -90,9 +98,7 @@ func coreEach(props coreEachProps) EachOperator {
 				callback:    props.callback,
 				info:        props.info,
 			})
-			if op == Break {
-				return Break
-			}
+			if op.shouldReturn() { return op }
 		}
 	case reflect.Map:
 		for _, key := range props.parentValue.MapKeys() {
@@ -103,9 +109,7 @@ func coreEach(props coreEachProps) EachOperator {
 				callback:    props.callback,
 				info:        props.info,
 			})
-			if op == Break {
-				return Break
-			}
+			if op.shouldReturn() { return op }
 		}
 	case reflect.Struct:
 		for i:=0;i< props.parentType.NumField();i++ {
@@ -119,9 +123,7 @@ func coreEach(props coreEachProps) EachOperator {
 				callback: props.callback,
 				info: props.info,
 			})
-			if op == Break {
-				return Break
-			}
+			if op.shouldReturn() { return op }
 		}
 	case reflect.Slice:
 		for i:=0;i<props.parentValue.Len();i++ {
@@ -134,12 +136,10 @@ func coreEach(props coreEachProps) EachOperator {
 				callback: props.callback,
 				info: props.info,
 			})
-			if op == Break {
-				return Break
-			}
+			if op.shouldReturn() { return op }
 		}
 	default:
-
+		// ignore other type
 	}
-	return Continue
+	return EachOperator{}
 }
