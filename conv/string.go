@@ -38,10 +38,19 @@ func StringBool(s string) (bool, error) {
 }
 func StringReflect(s string, rValue reflect.Value)  error {
 	rType := rValue.Type()
-	if rType.Kind() != reflect.Ptr {
-		return errors.New("StringReflect(s, reflect.ValueOf(&v)) v must be pointer")
+	if !rValue.CanSet() {
+		if rValue.Kind() == reflect.Ptr {
+			rValue = rValue.Elem()
+			rType = rType.Elem()
+		}
+		if !rValue.CanSet() {
+			return errors.New("StringReflect(s, rValue) rValue must can set, mu be you should use reflect.ValueOf(pointer)")
+		}
 	}
-	return coreStringReflect(s, rValue.Elem(), rType.Elem())
+	if rType.Kind() != reflect.Ptr {
+
+	}
+	return coreStringReflect(s, rValue, rType)
 }
 func coreStringReflect (s string, rValue reflect.Value, rType reflect.Type) error {
 	switch rType.Kind() {

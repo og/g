@@ -130,5 +130,36 @@ func TestStringReflect(t *testing.T) {
 		StringReflect("b我", reflect.ValueOf(&data.bytes)),
 	)
 	as.Equal(data, Data{"s", -1, -2, -3, -4, -5, 1, 2, 3, 4, 5, true, 0.1, 0.2, []byte("b我")})
-
+	{
+		{
+			data := struct {
+				Name string
+			}{}
+			as.ErrorString(StringReflect("nimoc", reflect.ValueOf(data).Field(0)), "StringReflect(s, rValue) rValue must can set, mu be you should use reflect.ValueOf(pointer)")
+		}
+		{
+			data := struct {
+				Name string
+			}{}
+			as.ErrorString(StringReflect("nimoc", reflect.ValueOf(data.Name)), "StringReflect(s, rValue) rValue must can set, mu be you should use reflect.ValueOf(pointer)")
+		}
+		{
+			data := struct {
+				Name string
+			}{}
+			as.NoError(
+				StringReflect("nimoc", reflect.ValueOf(&data).Elem().Field(0)),
+			)
+			as.Equal(data.Name, "nimoc")
+		}
+		{
+			data := struct {
+				Name string
+			}{}
+			as.NoError(
+				StringReflect("nimoc", reflect.ValueOf(&data.Name)),
+			)
+			as.Equal(data.Name, "nimoc")
+		}
+	}
 }
