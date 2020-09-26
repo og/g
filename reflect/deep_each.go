@@ -15,21 +15,21 @@ func (v EachOperator) String() string {
 	return string(v)
 }
 func (v EachOperator) Switch(
-	EachContinueHandle func(_EachContinue int),
-	EachBreakHandle func(_EachBreak bool),
+	ContinueHandle func(_Continue int),
+	BreakHandle func(_Break bool),
 	) {
 	switch v {
 	default:
 		panic(errors.New("EachOperator can not be (" + v.String() + ")"))
-	case EachContinue:
-		EachContinueHandle(0)
-	case EachBreak:
-		EachBreakHandle(false)
+	case Continue:
+		ContinueHandle(0)
+	case Break:
+		BreakHandle(false)
 	}
 }
 const (
-	EachContinue EachOperator = "continue"
-	EachBreak EachOperator = "break"
+	Continue EachOperator = "continue"
+	Break EachOperator = "break"
 )
 func DeepEach(v interface{}, callback EachCallback) {
 	if callback == nil {
@@ -66,13 +66,13 @@ func coreEach(props coreEachProps) EachOperator {
 	default:
 		operator := props.callback(props.parentValue, props.parentType, props.field)
 		shouldBreak := false
-		operator.Switch(func(_EachContinue int) {
+		operator.Switch(func(_Continue int) {
 			shouldBreak = false
-		}, func(_EachBreak bool) {
+		}, func(_Break bool) {
 			shouldBreak = true
 		})
 		if shouldBreak {
-			return EachBreak
+			return Break
 		}
 	}
 	if props.info.IsRoot {
@@ -90,8 +90,8 @@ func coreEach(props coreEachProps) EachOperator {
 				callback:    props.callback,
 				info:        props.info,
 			})
-			if op == EachBreak {
-				return EachBreak
+			if op == Break {
+				return Break
 			}
 		}
 	case reflect.Map:
@@ -103,8 +103,8 @@ func coreEach(props coreEachProps) EachOperator {
 				callback:    props.callback,
 				info:        props.info,
 			})
-			if op == EachBreak {
-				return EachBreak
+			if op == Break {
+				return Break
 			}
 		}
 	case reflect.Struct:
@@ -119,8 +119,8 @@ func coreEach(props coreEachProps) EachOperator {
 				callback: props.callback,
 				info: props.info,
 			})
-			if op == EachBreak {
-				return EachBreak
+			if op == Break {
+				return Break
 			}
 		}
 	case reflect.Slice:
@@ -134,12 +134,12 @@ func coreEach(props coreEachProps) EachOperator {
 				callback: props.callback,
 				info: props.info,
 			})
-			if op == EachBreak {
-				return EachBreak
+			if op == Break {
+				return Break
 			}
 		}
 	default:
 
 	}
-	return EachContinue
+	return Continue
 }

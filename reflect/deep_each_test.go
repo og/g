@@ -251,7 +251,7 @@ func TestDeepEach(t *testing.T) {
 			}(),
 			JSONTag: field.Tag.Get("json"),
 		})
-		return EachContinue
+		return Continue
 	})
 	as.Equal(infos, actualInfos)
 	if t.Failed() {
@@ -267,9 +267,9 @@ func TestEachOperator(t *testing.T) {
 	DeepEach(&list, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator {
 		msg += rValue.String()
 		if rValue.String() == "b" {
-			return EachBreak
+			return Break
 		}
-		return EachContinue
+		return Continue
 	})
 	as.Equal(msg, "ab")
 }
@@ -304,22 +304,22 @@ func BindRequest() error {
 	DeepEach(&createUser, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) EachOperator {
 		queryTag := field.Tag.Get("query")
 		if queryTag == "" {
-			return EachContinue
+			return Continue
 		}
 		value := query.Get(queryTag)
 		if value == "" {
-			return EachContinue
+			return Continue
 		}
 		err := gconv.StringReflect(value, rValue.Addr())
 		if err !=nil {
 			eachErr = err
-			return EachBreak
+			return Break
 		}
 		lenCount++
 		if lenCount == queryLen {
-			return EachBreak
+			return Break
 		}
-		return EachContinue
+		return Continue
 	})
 	log.Printf("%+v", createUser)
 	if eachErr != nil {
