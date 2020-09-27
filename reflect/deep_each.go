@@ -90,10 +90,9 @@ func coreEach(props coreEachProps) EachOperator {
 	case reflect.Ptr:
 		if !props.parentValue.IsNil() {
 			elementValue := props.parentValue.Elem()
-			elementType := props.parentType.Elem()
 			op := coreEach(coreEachProps{
 				parentValue: elementValue,
-				parentType:  elementType,
+				parentType:  elementValue.Type(),
 				field:       props.field,
 				callback:    props.callback,
 				info:        props.info,
@@ -102,9 +101,10 @@ func coreEach(props coreEachProps) EachOperator {
 		}
 	case reflect.Map:
 		for _, key := range props.parentValue.MapKeys() {
+			mapValue := props.parentValue.MapIndex(key)
 			op := coreEach(coreEachProps{
-				parentValue: props.parentValue.MapIndex(key),
-				parentType:  key.Type(),
+				parentValue: mapValue,
+				parentType:  mapValue.Type(),
 				field:       reflect.StructField{},
 				callback:    props.callback,
 				info:        props.info,

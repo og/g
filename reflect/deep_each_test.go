@@ -49,12 +49,15 @@ func TestDeepEach(t *testing.T) {
 		NewsList []News
 		StringPtr *string
 		Map map[string]string
+		MapPtr map[string]*string
 		NewsPtr1 *News
 		NewsPtr2 *News
 		NewsListPtr *[]News
 		NewsList2Ptr []*News
 	}
 	testStr := "orange"
+	strElem := "ptr"
+	strPtr := &strElem
 	demo := Demo{
 		Name:"nimoc", Age: 27,
 		UserID: "a",
@@ -69,6 +72,9 @@ func TestDeepEach(t *testing.T) {
 		StringPtr: &testStr,
 		Map: map[string]string{
 			"type": "pass",
+		},
+		MapPtr: map[string]*string{
+			"type": strPtr,
 		},
 		NewsPtr1: nil,
 		NewsPtr2: &News{Content:""},
@@ -189,6 +195,18 @@ func TestDeepEach(t *testing.T) {
 			CanNotSet: true,
 		},
 		{
+			FieldName: "MapPtr",
+			TypeName: "",
+			TypeKind: reflect.Map,
+			JSONString: `{"type":"ptr"}`,
+		},
+		{
+			FieldName: "",
+			TypeName: "string",
+			TypeKind: reflect.String,
+			JSONString: `"ptr"`,
+		},
+		{
 			FieldName: "NewsPtr2",
 			TypeName: "News",
 			TypeKind: reflect.Struct,
@@ -278,26 +296,24 @@ func TestEachOperator(t *testing.T) {
 	as.Equal(msg, "ab")
 }
 
-// func TestDeepEachMap(t *testing.T) {
-// 	as := gtest.NewAS(t)
-// 	type Item struct {
-// 		Value string
-// 	}
-// 	type Data map[string]Item
-//
-// 	data := Data{
-// 		"name": Item{"nimoc"},
-// 		"title": Item{"abc"},
-// 	}
-// 	err := DeepEach(data, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) (op EachOperator) {
-// 		if rType.Kind() == reflect.String {
-// 			rValue.SetString(rValue.String() + "!")
-// 		}
-// 		return
-// 	})
-// 	as.NoError(err)
-// 	log.Print(data)
-// }
+func TestDeepEachMap(t *testing.T) {
+	as := gtest.NewAS(t)
+	type Item struct {
+		Value string
+	}
+
+	type Data map[string]*Item
+
+	data := map[string]*Item{"name":{"nimoc"}}
+	err := DeepEach(data, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) (op EachOperator) {
+		if rType.Kind() == reflect.String {
+			rValue.SetString(rValue.String() + "!")
+		}
+		return
+	})
+	as.NoError(err)
+	as.Equal(data, map[string]*Item{"name":{"nimoc!"}})
+}
 func TestDeepEachError(t *testing.T) {
 	as := gtest.NewAS(t)
 	err := DeepEach(map[string]int{"a":1,"b":2}, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) (op EachOperator) {
