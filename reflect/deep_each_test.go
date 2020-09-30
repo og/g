@@ -325,3 +325,28 @@ func TestDeepEachError(t *testing.T) {
 	as.ErrorString(err, "value can not be 2")
 }
 
+func TestDeepEachTree(t *testing.T) {
+	as := gtest.NewAS(t)
+	_=as
+	type Node struct {
+		Name string
+		Value string
+		Node *Node
+	}
+	node := Node{
+		Name:"a",
+		Value: "",
+		Node: &Node{
+			Name:"b",
+			Value: "",
+			Node: nil,
+		},
+	}
+	var names []string
+	err := DeepEach(&node, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) (op EachOperator) {
+		names  = append(names, field.Name)
+		return
+	})
+	as.NoError(err)
+	as.Equal(names, []string{"Name", "Value","Node", "Name", "Value"})
+}
