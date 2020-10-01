@@ -2,7 +2,6 @@ package greflect
 
 import (
 	"errors"
-	"log"
 	"reflect"
 )
 
@@ -17,7 +16,7 @@ type EachOperator struct {
 }
 func (op EachOperator) Error(err error) EachOperator {
 	if err == nil {
-		log.Print("greflect: warning BreakAndReturnError(err) err is nil, maybe you write wrong code.")
+		panic(errors.New("greflect: warning Error(err) err is nil, maybe you write wrong code."))
 	}
 	return EachOperator{
 		error: err,
