@@ -37,8 +37,7 @@ func (op EachOperator) shouldReturn() bool {
 	}
 	return false
 }
-
-func DeepEach(v interface{}, callback EachCallback) error {
+func deepEach(v interface{}, callback EachCallback, write bool) error {
 	if callback == nil {
 		panic(errors.New("greject.DeepEach(&v, callback) callback can not be nil"))
 	}
@@ -46,13 +45,15 @@ func DeepEach(v interface{}, callback EachCallback) error {
 	rootValue := reflect.ValueOf(v)
 	rootType := rootValue.Type()
 
-	if !rootValue.CanSet() && rootType.Kind() != reflect.Map {
-		if rootValue.Kind() == reflect.Ptr {
-			rootValue = rootValue.Elem()
-			rootType = rootType.Elem()
-		}
-		if !rootValue.CanSet() {
-			return errors.New("DeepEach(v, callback) v must can set, mu be you should use DeepEach(&v, callback)")
+	if write {
+		if !rootValue.CanSet() && rootType.Kind() != reflect.Map {
+			if rootValue.Kind() == reflect.Ptr {
+				rootValue = rootValue.Elem()
+				rootType = rootType.Elem()
+			}
+			if !rootValue.CanSet() {
+				return errors.New("DeepEach(v, callback) v must can set, mu be you should use DeepEach(&v, callback)")
+			}
 		}
 	}
 	info := DeepEachInfo{
@@ -66,6 +67,12 @@ func DeepEach(v interface{}, callback EachCallback) error {
 		info: info,
 	})
 	return op.error
+}
+func OnlyReadDeepEach(v interface{}, callback EachCallback) error {
+	return deepEach(v, callback, false)
+}
+func DeepEach(v interface{}, callback EachCallback) error {
+	return deepEach(v, callback, true)
 }
 type coreEachProps struct {
 	parentValue reflect.Value
