@@ -1,7 +1,7 @@
 package ge
 
 import (
-	ogjson "github.com/og/x/json"
+	ogjson "github.com/og/json"
 )
 
 type reject struct {
