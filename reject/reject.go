@@ -1,7 +1,7 @@
 package greject
 
 import (
-	gjson "github.com/og/x/json"
+	gjson "github.com/og/json"
 )
 
 type Service struct {
