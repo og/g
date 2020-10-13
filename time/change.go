@@ -3,7 +3,10 @@ package gtime
 import (
 	"time"
 )
-
+// 1992-12-19 11:11:11.988 => 1992-12-19 11:11:00.000
+func FirstNanoseconds (v time.Time) time.Time{
+	return time.Date(v.Year(), v.Month(), v.Day(), v.Hour(), v.Minute() ,v.Second(), 0, v.Location())
+}
 // 1992-12-19 11:11:11 => 1992-12-19 11:11:00
 func FirstSecond (v time.Time) time.Time{
 	return time.Date(v.Year(), v.Month(), v.Day(), v.Hour(), v.Minute() ,0, 0, v.Location())

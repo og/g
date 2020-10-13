@@ -6,6 +6,23 @@ import (
 	"testing"
 )
 
+func TestFirstNanoseconds(t *testing.T) {
+	as := gtest.NewAS(t)
+	_=as
+	layout := "2006-01-02 15:04:05.999999999"
+	{
+		testCase := [][]string{
+			{"1992-12-19 11:11:00.763035", "1992-12-19 11:11:00",},
+			{"1992-12-19 11:11:01.763035", "1992-12-19 11:11:01",},
+			{"1992-12-19 11:11:02.763035", "1992-12-19 11:11:02",},
+		}
+		for _,v := range testCase {
+			tv := gtime.ParseUTC(layout, v[0])
+			as.Equal(gtime.FirstNanoseconds(tv).Format(layout), v[1])
+			as.Equal(gtime.FirstNanoseconds(tv).Nanosecond(), 0)
+		}
+	}
+}
 func TestFirstSecond(t *testing.T) {
 	as := gtest.NewAS(t)
 	{
